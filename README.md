@@ -1,1 +1,1 @@
-# jeevika-shah-jewellery-admin-panel
+# Jeevika Shah Admin Panel
