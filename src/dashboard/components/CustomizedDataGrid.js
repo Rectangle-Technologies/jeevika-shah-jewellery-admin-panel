@@ -1,18 +1,20 @@
 import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
+import { columns, rows } from '../internals/data/gridData';
 
-export default function CustomizedDataGrid(props) {
+export default function CustomizedDataGrid() {
   return (
     <DataGrid
-      rows={props.rows}
-      columns={props.columns}
+      checkboxSelection
+      rows={rows}
+      columns={columns}
       getRowClassName={(params) =>
         params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
       }
       initialState={{
-        pagination: { paginationModel: { pageSize: props.pageSize } },
+        pagination: { paginationModel: { pageSize: 20 } },
       }}
-      pageSizeOptions={props.pageSizeOptions}
+      pageSizeOptions={[10, 20, 50]}
       disableColumnResize
       density="compact"
       slotProps={{

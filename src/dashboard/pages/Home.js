@@ -5,15 +5,16 @@ import { useSnackbar } from "notistack"
 import React, { useEffect } from "react"
 import authHeader from "../constants/authHeader"
 import formatAmount from "../helpers/formatAmount"
+import { backendUrl } from "../constants/url"
 
 const Home = () => {
     const columns = [
         { field: 'id', headerName: 'ID', width: 220 },
         { field: 'orderDate', headerName: 'Placed On', width: 170 },
-        { field: 'customerName', headerName: 'Customer Name', width: 180 },
+        { field: 'customerName', headerName: 'Customer Name', width: 200 },
         { field: 'status', headerName: 'Status', width: 90 },
         { field: 'paymentStatus', headerName: 'Payment Status', width: 130 },
-        { field: 'totalAmount', headerName: 'Total Amount', width: 150 },
+        { field: 'totalAmount', headerName: 'Total Amount', flex: 1 },
     ]
 
     const [isLoading, setIsLoading] = React.useState(true)
@@ -22,7 +23,7 @@ const Home = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`http://localhost:6969/order/get-all?pageNo=1&pageSize=10`, { headers: authHeader })
+            const response = await axios.get(`${backendUrl}/order/get-all?pageNo=1&pageSize=10`, { headers: authHeader })
             setRows(response.data.body.map((order, index) => ({
                 id: order._id,
                 orderDate: new Date(order.createdAt).toLocaleDateString('en-IN', {
@@ -63,7 +64,7 @@ const Home = () => {
                 Here are your recent orders:
             </Typography>
             <Grid container>
-                <Grid item xs={12}>
+                <Grid item xs={12} width="100%">
                     <DataGrid
                         rows={rows}
                         columns={columns}
