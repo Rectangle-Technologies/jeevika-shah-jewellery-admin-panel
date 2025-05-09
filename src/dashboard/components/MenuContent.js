@@ -11,11 +11,11 @@ import Stack from '@mui/material/Stack';
 import * as React from 'react';
 
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon /> },
-  { text: 'Products', icon: <AnalyticsRoundedIcon /> },
-  { text: 'Orders', icon: <PeopleRoundedIcon /> },
-  { text: 'Inquiry', icon: <AssignmentRoundedIcon /> },
-  { text: 'User', icon: <AssignmentRoundedIcon /> },
+  { text: 'Home', icon: <HomeRoundedIcon />, path: '/' },
+  { text: 'Products', icon: <AnalyticsRoundedIcon />, path: '/products' },
+  { text: 'Orders', icon: <PeopleRoundedIcon />, path: '/orders' },
+  { text: 'Inquiries', icon: <AssignmentRoundedIcon />, path: '/inquiries' },
+  { text: 'Users', icon: <AssignmentRoundedIcon />, path: '/users' },
 ];
 
 export default function MenuContent() {
@@ -24,7 +24,7 @@ export default function MenuContent() {
       <List dense>
         {mainListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton selected={index === 0}>
+            <ListItemButton selected={window.location.pathname === item.path}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

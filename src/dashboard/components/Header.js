@@ -5,8 +5,10 @@ import CustomDatePicker from './CustomDatePicker';
 import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 import MenuButton from './MenuButton';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 import Search from './Search';
+import { Button } from '@mui/material';
 
 export default function Header() {
   return (
@@ -24,12 +26,15 @@ export default function Header() {
     >
       <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
-        <Search />
-        <CustomDatePicker />
-        <MenuButton showBadge aria-label="Open notifications">
+        {/* <Search /> */}
+        {/* <CustomDatePicker /> */}
+        {/* <MenuButton showBadge aria-label="Open notifications">
           <NotificationsRoundedIcon />
-        </MenuButton>
+        </MenuButton> */}
         <ColorModeIconDropdown />
+        <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
+          Logout
+        </Button>
       </Stack>
     </Stack>
   );
