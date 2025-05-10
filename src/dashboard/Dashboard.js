@@ -15,6 +15,8 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import { Stack } from '@mui/material';
 import MainGrid from './components/MainGrid';
+import OrderDetail from './pages/OrderDetail';
+import Products from './pages/Products';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -53,6 +55,8 @@ export default function Dashboard(props) {
             {/* Main content */}
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/order/:orderId" element={<OrderDetail />} />
             </Routes>
           </Stack>
         </Box>

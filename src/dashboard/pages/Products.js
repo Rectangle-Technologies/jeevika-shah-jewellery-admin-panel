@@ -6,9 +6,8 @@ import React, { useEffect } from "react"
 import authHeader from "../constants/authHeader"
 import formatAmount from "../helpers/formatAmount"
 import { backendUrl } from "../constants/url"
-import { useNavigate } from "react-router-dom"
 
-const Home = () => {
+const Products = () => {
     const columns = [
         { field: 'id', headerName: 'Order ID', width: 220 },
         { field: 'orderDate', headerName: 'Placed On', width: 170 },
@@ -21,7 +20,6 @@ const Home = () => {
     const [isLoading, setIsLoading] = React.useState(true)
     const [rows, setRows] = React.useState([])
     const { enqueueSnackbar } = useSnackbar()
-    const navigate = useNavigate()
 
     const fetchOrders = async () => {
         try {
@@ -60,7 +58,7 @@ const Home = () => {
 
         <Box sx={{ width: '100%', maxWidth: { sm: '100%' } }}>
             <Typography variant="h2" sx={{ mb: 2 }}>
-                Welcome, Jeevika Shah!
+                Welcome, products!
             </Typography>
             <Typography sx={{ mb: 2, fontSize: 16 }}>
                 Here are your recent orders:
@@ -73,14 +71,6 @@ const Home = () => {
                         hideFooter
                         disableColumnResize
                         loading={isLoading}
-                        onCellClick={cellData => {
-                            navigate(`/order/${cellData.row.id}`)
-                        }}
-                        sx={{
-                            '& .MuiDataGrid-cell': {
-                                cursor: 'pointer'
-                            }
-                        }}
                     />
                 </Grid>
             </Grid>
@@ -88,4 +78,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Products
