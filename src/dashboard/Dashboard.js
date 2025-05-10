@@ -17,6 +17,7 @@ import { Stack } from '@mui/material';
 import MainGrid from './components/MainGrid';
 import OrderDetail from './pages/OrderDetail';
 import Products from './pages/Products';
+import Orders from './pages/Orders';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -56,6 +57,7 @@ export default function Dashboard(props) {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
+              <Route path="/orders" element={<Orders />} />
               <Route path="/order/:orderId" element={<OrderDetail />} />
             </Routes>
           </Stack>

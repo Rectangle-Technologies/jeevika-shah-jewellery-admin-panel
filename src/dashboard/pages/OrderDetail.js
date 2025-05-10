@@ -166,20 +166,19 @@ const OrderDetail = () => {
                                 {order.status !== 'Cancelled' && order.status !== 'Delivered' &&
                                     <Card variant="outlined" sx={{ width: '100%' }}>
                                         <CardHeader title="Order Actions" />
-                                        {order.status !== 'Cancelled' && order.status !== 'Delivered' &&
+                                        {order.status === 'Placed' && <>
                                             <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
                                                 <Button variant="contained" color="error" onClick={() => handleOpen('Cancelled')}>
                                                     Cancel Order
                                                 </Button>
                                             </CardContent>
-                                        }
-                                        {order.status === 'Placed' &&
+
                                             <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 4 }}>
                                                 <Button variant="contained" color="success" onClick={() => handleOpen('Shipped')}>
                                                     Mark order as Shipped
                                                 </Button>
                                             </CardContent>
-                                        }
+                                        </>}
                                         {order.status === 'Shipped' &&
                                             <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 4 }}>
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
