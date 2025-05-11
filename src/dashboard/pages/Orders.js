@@ -39,7 +39,7 @@ const Orders = () => {
                     minute: '2-digit',
                     hour12: true,
                 }),
-                customerName: order.userId.name,
+                customerName: order?.userId?.name,
                 status: order.status,
                 paymentStatus: order.paymentStatus,
                 totalAmount: formatAmount(order.totalAmount),
@@ -69,7 +69,10 @@ const Orders = () => {
                     </Typography>
                 </Grid>
                 <Grid item size={{ xs: 12, md: 6 }} sx={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 2 }}>
-                    <Button variant='contained'>Create Custom Order</Button>
+                    <Button
+                        variant='contained'
+                        onClick={() => navigate('/order/create-custom')}
+                    >Create Custom Order</Button>
                 </Grid>
             </Grid>
             <Grid container sx={{ mt: 3 }}>

@@ -162,6 +162,16 @@ const OrderDetail = () => {
 
                                     </CardContent>
                                 </Card>
+                                {order.customOrderDetails.isCustomOrder && 
+                                    <Card variant="outlined" sx={{ width: '100%' }}>
+                                        <CardHeader title="Order Customization Details" />
+                                        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                                            <Typography sx={{ fontSize: 16 }}>
+                                                {order.customOrderDetails.description}
+                                            </Typography>
+                                        </CardContent>
+                                    </Card>
+                                }
                                 {order.status !== 'Cancelled' && order.status !== 'Delivered' &&
                                     <Card variant="outlined" sx={{ width: '100%' }}>
                                         <CardHeader title="Order Actions" />

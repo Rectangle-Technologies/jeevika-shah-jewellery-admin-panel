@@ -36,19 +36,19 @@ function SideMenuMobile({ open, toggleDrawer }) {
             direction="row"
             sx={{ gap: 1, alignItems: 'center', flexGrow: 1, p: 1 }}
           >
-            <Avatar
+            {/* <Avatar
               sizes="small"
               alt="Admin Panel"
               src="/static/images/avatar/7.jpg"
               sx={{ width: 24, height: 24 }}
-            />
+            /> */}
             <Typography component="p" variant="h6">
               Admin Panel
             </Typography>
           </Stack>
-          <MenuButton showBadge>
+          {/* <MenuButton showBadge>
             <NotificationsRoundedIcon />
-          </MenuButton>
+          </MenuButton> */}
         </Stack>
         <Divider />
         <Stack sx={{ flexGrow: 1 }}>

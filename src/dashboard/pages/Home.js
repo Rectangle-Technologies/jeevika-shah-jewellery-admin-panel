@@ -36,7 +36,7 @@ const Home = () => {
                     minute: '2-digit',
                     hour12: true,
                 }),
-                customerName: order.userId.name,
+                customerName: order?.userId?.name,
                 status: order.status,
                 paymentStatus: order.paymentStatus,
                 totalAmount: formatAmount(order.totalAmount),

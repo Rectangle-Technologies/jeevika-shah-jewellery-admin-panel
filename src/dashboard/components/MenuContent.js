@@ -1,6 +1,7 @@
-import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
+import DiamondIcon from '@mui/icons-material/Diamond';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -12,10 +13,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon />, path: '/' },
-  { text: 'Products', icon: <AnalyticsRoundedIcon />, path: '/products' },
-  { text: 'Orders', icon: <PeopleRoundedIcon />, path: '/orders' },
+  { text: 'Products', icon: <DiamondIcon />, path: '/products' },
+  { text: 'Orders', icon: <InventoryIcon />, path: '/orders' },
+  { text: 'User Orders', icon: <InventoryIcon />, path: '/user-orders' },
   { text: 'Inquiries', icon: <AssignmentRoundedIcon />, path: '/inquiries' },
-  { text: 'Users', icon: <AssignmentRoundedIcon />, path: '/users' },
+  { text: 'Users', icon: <PeopleRoundedIcon />, path: '/users' },
 ];
 
 export default function MenuContent() {

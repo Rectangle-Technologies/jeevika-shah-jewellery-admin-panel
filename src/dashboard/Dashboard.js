@@ -18,6 +18,8 @@ import MainGrid from './components/MainGrid';
 import OrderDetail from './pages/OrderDetail';
 import Products from './pages/Products';
 import Orders from './pages/Orders';
+import NewCustomOrder from './pages/NewCustomOrder';
+import UserOrders from './pages/UserOrders';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -58,6 +60,8 @@ export default function Dashboard(props) {
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<Products />} />
               <Route path="/orders" element={<Orders />} />
+              <Route path="/user-orders" element={<UserOrders />} />
+              <Route path="/order/create-custom" element={<NewCustomOrder />} />
               <Route path="/order/:orderId" element={<OrderDetail />} />
             </Routes>
           </Stack>

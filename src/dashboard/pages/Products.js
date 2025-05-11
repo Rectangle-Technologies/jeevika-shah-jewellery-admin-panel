@@ -1,11 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material"
-import { DataGrid } from "@mui/x-data-grid"
-import axios from "axios"
-import { useSnackbar } from "notistack"
-import React, { useEffect } from "react"
-import authHeader from "../constants/authHeader"
-import formatAmount from "../helpers/formatAmount"
-import { backendUrl } from "../constants/url"
+import { Box, Typography } from "@mui/material"
 
 const Products = () => {
 
