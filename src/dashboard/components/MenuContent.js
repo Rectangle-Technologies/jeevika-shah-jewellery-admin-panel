@@ -27,7 +27,7 @@ export default function MenuContent() {
     <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
       <List dense>
         {mainListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
+          <ListItem key={index} disablePadding sx={{ display: 'block', mb: 1 }}>
             <ListItemButton
               selected={location.pathname === item.path}
               onClick={() => navigate(item.path)}>
