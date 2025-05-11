@@ -26,7 +26,7 @@ const Home = () => {
     const fetchOrders = async () => {
         try {
             const response = await axios.get(`${backendUrl}/order/get-all?pageNo=1&pageSize=10`, { headers: authHeader })
-            setRows(response.data.body.map((order, index) => ({
+            setRows(response.data.body.orders.map((order, index) => ({
                 id: order._id,
                 orderDate: new Date(order.createdAt).toLocaleDateString('en-IN', {
                     year: '2-digit',

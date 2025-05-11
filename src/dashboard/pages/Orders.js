@@ -4,7 +4,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import formatAmount from '../helpers/formatAmount'
 import { DataGrid } from '@mui/x-data-grid'
-import { Box, Button, Grid } from '@mui/material'
+import { Box, Button, Grid, Pagination, Typography } from '@mui/material'
 import { backendUrl } from '../constants/url'
 import authHeader from '../constants/authHeader'
 
@@ -20,13 +20,16 @@ const Orders = () => {
 
     const [isLoading, setIsLoading] = React.useState(true)
     const [rows, setRows] = React.useState([])
+    const [page, setPage] = React.useState(1)
+    const [totalPages, setTotalPages] = React.useState(0)
+    const rowsPerPage = 20
     const { enqueueSnackbar } = useSnackbar()
     const navigate = useNavigate()
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/order/get-all?pageNo=1&pageSize=20`, { headers: authHeader })
-            setRows(response.data.body.map((order, index) => ({
+            const response = await axios.get(`${backendUrl}/order/get-all?pageNo=${page}&pageSize=${rowsPerPage}`, { headers: authHeader })
+            setRows(response.data.body.orders.map((order, index) => ({
                 id: order._id,
                 orderDate: new Date(order.createdAt).toLocaleDateString('en-IN', {
                     year: '2-digit',
@@ -41,12 +44,14 @@ const Orders = () => {
                 paymentStatus: order.paymentStatus,
                 totalAmount: formatAmount(order.totalAmount),
             })))
+            setTotalPages(Math.ceil(response.data.body.totalOrders / rowsPerPage))
         } catch (error) {
             console.error('Error fetching orders:', error)
-            enqueueSnackbar("Error fetching orders", {
+            enqueueSnackbar(error?.response?.data?.message || "Error fetching orders", {
                 autoHideDuration: 2000,
                 variant: "error",
             });
+            setRows([])
         } finally {
             setIsLoading(false)
         }
@@ -54,11 +59,16 @@ const Orders = () => {
 
     React.useEffect(() => {
         fetchOrders()
-    }, [])
+    }, [page])
     return (
         <Box sx={{ width: '100%', maxWidth: { sm: '100%' } }}>
-            <Grid container sx={{ mt: 3 }}>
-                <Grid item xs={12} width="100%" sx={{ display: 'flex', justifyContent: 'flex-end', mr: 2 }}>
+            <Grid container columns={12} sx={{ mt: 3 }}>
+                <Grid item size={{ xs: 12, md: 6 }}>
+                    <Typography variant="h2">
+                        All Orders
+                    </Typography>
+                </Grid>
+                <Grid item size={{ xs: 12, md: 6 }} sx={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 2 }}>
                     <Button variant='contained'>Create Custom Order</Button>
                 </Grid>
             </Grid>
@@ -79,6 +89,14 @@ const Orders = () => {
                             }
                         }}
                     />
+                </Grid>
+                <Grid item xs={12} width='100%' sx={{
+                    mt: 2,
+                    display: { xs: 'none', md: 'flex' },
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}>
+                    <Pagination count={totalPages} onChange={(event, value) => setPage(value)} />
                 </Grid>
             </Grid>
         </Box>

@@ -18,7 +18,6 @@ const OrderDetail = () => {
     const [open, setOpen] = React.useState(false);
     const [status, setStatus] = React.useState()
     const [deliveredOn, setDeliveredOn] = React.useState()
-    console.log(toIsoWithOffset(new Date(deliveredOn)))
 
     const fetchOrder = async () => {
         try {
