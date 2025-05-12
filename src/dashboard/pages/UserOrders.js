@@ -1,6 +1,6 @@
 import { Box, Button, CircularProgress, Grid, TextField, Typography } from '@mui/material'
 import { enqueueSnackbar, useSnackbar } from 'notistack'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { backendUrl } from '../constants/url'
 import authHeader from '../constants/authHeader'
 import axios from 'axios'
@@ -12,8 +12,8 @@ const UserOrders = () => {
     const location = useLocation()
     const [phone, setPhone] = React.useState(location.state?.phone || '')
     const [isLoading, setIsLoading] = React.useState(false)
-    const [user, setUser] = React.useState(location.state?.user || null)
-    const [rows, setRows] = React.useState(location.state?.rows || [])
+    const [user, setUser] = React.useState(null)
+    const [rows, setRows] = React.useState([])
     const { enqueueSnackbar } = useSnackbar()
     const MobileNumberRegex = /^[6-9][0-9]{9}$/
     const columns = [
@@ -65,6 +65,12 @@ const UserOrders = () => {
         }
     }
 
+    useEffect(() => {
+        if (location.state?.phone) {
+            handleSearch()
+        }
+    }, [])
+
     return (
         <Box sx={{ width: '100%', maxWidth: { sm: '100%' } }}>
             <Typography variant="h2">
@@ -113,7 +119,7 @@ const UserOrders = () => {
                             hideFooter
                             onCellClick={cellData => {
                                 navigate(`/order/${cellData.row.id}`, {
-                                    state: { phone, user, rows, url: location.pathname }
+                                    state: { phone: user.phone, url: location.pathname }
                                 });
                             }}
                             sx={{
