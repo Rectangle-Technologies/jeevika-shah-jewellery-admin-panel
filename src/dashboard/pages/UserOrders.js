@@ -5,14 +5,15 @@ import { backendUrl } from '../constants/url'
 import authHeader from '../constants/authHeader'
 import axios from 'axios'
 import { DataGrid } from '@mui/x-data-grid'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import formatAmount from '../helpers/formatAmount'
 
 const UserOrders = () => {
-    const [phone, setPhone] = React.useState('')
+    const location = useLocation()
+    const [phone, setPhone] = React.useState(location.state?.phone || '')
     const [isLoading, setIsLoading] = React.useState(false)
-    const [user, setUser] = React.useState(null)
-    const [rows, setRows] = React.useState([])
+    const [user, setUser] = React.useState(location.state?.user || null)
+    const [rows, setRows] = React.useState(location.state?.rows || [])
     const { enqueueSnackbar } = useSnackbar()
     const MobileNumberRegex = /^[6-9][0-9]{9}$/
     const columns = [
@@ -111,7 +112,9 @@ const UserOrders = () => {
                             columns={columns}
                             hideFooter
                             onCellClick={cellData => {
-                                navigate(`/order/${cellData.row.id}`);
+                                navigate(`/order/${cellData.row.id}`, {
+                                    state: { phone, user, rows, url: location.pathname }
+                                });
                             }}
                             sx={{
                                 '& .MuiDataGrid-cell': {

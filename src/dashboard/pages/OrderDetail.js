@@ -4,11 +4,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import axios from 'axios'
 import { useSnackbar } from 'notistack'
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import ConfirmationModal from '../components/ConfirmationModal'
 import authHeader from '../constants/authHeader'
 import { backendUrl } from '../constants/url'
 import { toIsoWithOffset } from '../helpers/formatDate'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const OrderDetail = () => {
     const [order, setOrder] = React.useState()
@@ -18,6 +19,8 @@ const OrderDetail = () => {
     const [open, setOpen] = React.useState(false);
     const [status, setStatus] = React.useState()
     const [deliveredOn, setDeliveredOn] = React.useState()
+    const navigate = useNavigate()
+    const location = useLocation()
 
     const fetchOrder = async () => {
         try {
@@ -81,9 +84,11 @@ const OrderDetail = () => {
                     {order
                         ? (
                             <Stack spacing={2} sx={{ width: '100%' }}>
-                                <Typography variant="h2" sx={{ mb: 2 }}>
-                                    Order Details
-                                </Typography>
+                                <Box>
+                                    <Button variant="outlined" onClick={() => navigate(location?.state?.url || -1, { state: location.state })}>
+                                        <ArrowBackIcon />
+                                    </Button>
+                                </Box>
                                 <Card variant="outlined" sx={{ width: '100%' }}>
                                     <CardContent>
                                         <Grid container columns={12}>
