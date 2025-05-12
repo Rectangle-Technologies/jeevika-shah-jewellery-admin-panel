@@ -7,6 +7,7 @@ import authHeader from "../constants/authHeader"
 import formatAmount from "../helpers/formatAmount"
 import { backendUrl } from "../constants/url"
 import { useNavigate } from "react-router-dom"
+import StatCard from "../components/StatCard"
 
 const Home = () => {
     const columns = [
@@ -20,13 +21,29 @@ const Home = () => {
 
     const [isLoading, setIsLoading] = React.useState(true)
     const [rows, setRows] = React.useState([])
+    const [data, setData] = React.useState([
+        {
+            title: 'New Users',
+            value: '',
+            interval: 'This month'
+        },
+        {
+            title: 'Orders',
+            value: '',
+            interval: 'This month'
+        },
+        {
+            title: 'Total Revenue',
+            value: '',
+            interval: 'This month'
+        }])
     const { enqueueSnackbar } = useSnackbar()
     const navigate = useNavigate()
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/order/get-all?pageNo=1&pageSize=10`, { headers: authHeader })
-            setRows(response.data.body.orders.map((order, index) => ({
+            const response = await axios.get(`${backendUrl}/dashboard/get-data`, { headers: authHeader })
+            setRows(response.data.body.recentOrders.map((order, index) => ({
                 id: order._id,
                 orderDate: new Date(order.createdAt).toLocaleDateString('en-IN', {
                     year: '2-digit',
@@ -41,6 +58,13 @@ const Home = () => {
                 paymentStatus: order.paymentStatus,
                 totalAmount: formatAmount(order.totalAmount),
             })))
+            setData(prevData => {
+                const updatedData = [...prevData]
+                updatedData[0].value = response.data.body.totalUsers
+                updatedData[1].value = response.data.body.totalOrders
+                updatedData[2].value = formatAmount(response.data.body.totalRevenue)
+                return updatedData
+            })
         } catch (error) {
             console.error('Error fetching orders:', error)
             enqueueSnackbar("Error fetching orders", {
@@ -63,7 +87,22 @@ const Home = () => {
                 Welcome, Jeevika Shah!
             </Typography>
             <Typography sx={{ mb: 2, fontSize: 16 }}>
-                Here are your recent orders:
+                Some quick stats:
+            </Typography>
+            <Grid
+                container
+                spacing={2}
+                columns={12}
+                sx={{ mb: 2 }}
+            >
+                {data.map((card, index) => (
+                    <Grid key={index} size={{ xs: 12, sm: 6, lg: 4 }}>
+                        <StatCard {...card} />
+                    </Grid>
+                ))}
+            </Grid>
+            <Typography sx={{ mb: 2, fontSize: 16 }}>
+                Recent orders:
             </Typography>
             <Grid container>
                 <Grid item xs={12} width="100%">
