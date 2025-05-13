@@ -1,5 +1,5 @@
 import { Box, Button, CircularProgress, Grid, TextField, Typography } from '@mui/material'
-import { enqueueSnackbar, useSnackbar } from 'notistack'
+import { enqueueSnackbar } from 'notistack'
 import React, { useEffect } from 'react'
 import { backendUrl } from '../constants/url'
 import authHeader from '../constants/authHeader'
@@ -14,7 +14,6 @@ const UserOrders = () => {
     const [isLoading, setIsLoading] = React.useState(false)
     const [user, setUser] = React.useState(null)
     const [rows, setRows] = React.useState([])
-    const { enqueueSnackbar } = useSnackbar()
     const MobileNumberRegex = /^[6-9][0-9]{9}$/
     const columns = [
         { field: 'id', headerName: 'Order ID', width: 220 },

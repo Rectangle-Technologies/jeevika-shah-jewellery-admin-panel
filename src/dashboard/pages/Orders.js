@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import formatAmount from '../helpers/formatAmount'
@@ -7,6 +6,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import { Box, Button, Grid, Pagination, Typography } from '@mui/material'
 import { backendUrl } from '../constants/url'
 import authHeader from '../constants/authHeader'
+import { enqueueSnackbar } from 'notistack'
 
 const Orders = () => {
     const columns = [
@@ -23,7 +23,6 @@ const Orders = () => {
     const [page, setPage] = React.useState(1)
     const [totalPages, setTotalPages] = React.useState(0)
     const rowsPerPage = 20
-    const { enqueueSnackbar } = useSnackbar()
     const navigate = useNavigate()
 
     const fetchOrders = async () => {

@@ -1,9 +1,9 @@
 import { Box, Button, Grid, OutlinedInput, TextField, Typography } from '@mui/material'
 import axios from 'axios'
-import { useSnackbar } from 'notistack'
 import React from 'react'
 import { backendUrl } from '../constants/url'
 import authHeader from '../constants/authHeader'
+import { enqueueSnackbar } from 'notistack'
 
 const NewCustomOrder = () => {
     const [phone, setPhone] = React.useState('')
@@ -25,8 +25,6 @@ const NewCustomOrder = () => {
             size: "14 cm"
         }
     ])
-
-    const { enqueueSnackbar } = useSnackbar()
     const MobileNumberRegex = /^[6-9][0-9]{9}$/
 
     const handleSearch = async () => {

@@ -2,7 +2,6 @@ import { Box, Button, Card, CardContent, CardHeader, CircularProgress, Grid, Pap
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import axios from 'axios'
-import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import ConfirmationModal from '../components/ConfirmationModal'
@@ -10,11 +9,11 @@ import authHeader from '../constants/authHeader'
 import { backendUrl } from '../constants/url'
 import { toIsoWithOffset } from '../helpers/formatDate'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { enqueueSnackbar } from 'notistack'
 
 const OrderDetail = () => {
     const [order, setOrder] = React.useState()
     const [isLoading, setIsLoading] = React.useState(true)
-    const { enqueueSnackbar } = useSnackbar()
     const { orderId } = useParams()
     const [open, setOpen] = React.useState(false);
     const [status, setStatus] = React.useState()

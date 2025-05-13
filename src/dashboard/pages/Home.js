@@ -1,13 +1,13 @@
 import { Box, Grid, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import axios from "axios"
-import { useSnackbar } from "notistack"
 import React, { useEffect } from "react"
 import authHeader from "../constants/authHeader"
 import formatAmount from "../helpers/formatAmount"
 import { backendUrl } from "../constants/url"
 import { useNavigate } from "react-router-dom"
 import StatCard from "../components/StatCard"
+import { enqueueSnackbar } from "notistack"
 
 const Home = () => {
     const columns = [
@@ -33,11 +33,10 @@ const Home = () => {
             interval: 'This month'
         },
         {
-            title: 'Total Revenue',
+            title: 'Sales',
             value: '',
             interval: 'This month'
         }])
-    const { enqueueSnackbar } = useSnackbar()
     const navigate = useNavigate()
 
     const fetchOrders = async () => {

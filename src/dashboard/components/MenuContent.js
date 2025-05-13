@@ -3,6 +3,7 @@ import DiamondIcon from '@mui/icons-material/Diamond';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InventoryIcon from '@mui/icons-material/Inventory';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -16,8 +17,8 @@ const mainListItems = [
   { text: 'Products', icon: <DiamondIcon />, path: '/products' },
   { text: 'All Orders', icon: <InventoryIcon />, path: '/all-orders' },
   { text: 'User Orders', icon: <InventoryIcon />, path: '/user-orders' },
-  { text: 'Inquiries', icon: <AssignmentRoundedIcon />, path: '/inquiries' },
   { text: 'Users', icon: <PeopleRoundedIcon />, path: '/users' },
+  { text: 'Metal Prices', icon: <CurrencyRupeeIcon />, path: '/metal-prices' }
 ];
 
 export default function MenuContent() {
