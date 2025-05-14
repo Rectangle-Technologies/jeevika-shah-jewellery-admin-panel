@@ -11,7 +11,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from './theme/customizations';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import { Stack } from '@mui/material';
 import MainGrid from './components/MainGrid';
@@ -22,6 +22,7 @@ import NewCustomOrder from './pages/NewCustomOrder';
 import UserOrders from './pages/UserOrders';
 import MetalPrices from './pages/MetalPrices';
 import Users from './pages/Users';
+import Login from './pages/Login';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -31,47 +32,52 @@ const xThemeComponents = {
 };
 
 export default function Dashboard(props) {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
-      <Box sx={{ display: 'flex' }}>
-        <SideMenu />
-        <AppNavbar />
-        <Box
-          component="main"
-          sx={(theme) => ({
-            flexGrow: 1,
-            backgroundColor: theme.vars
-              ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-              : alpha(theme.palette.background.default, 1),
-            overflow: 'auto',
-          })}
-        >
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: 'center',
-              mx: 3,
-              pb: 5,
-              mt: { xs: 8, md: 2 },
-            }}
+      {isLoginPage
+        ? <Login />
+        :
+        <Box sx={{ display: 'flex' }}>
+          <SideMenu />
+          <AppNavbar />
+          <Box
+            component="main"
+            sx={(theme) => ({
+              flexGrow: 1,
+              backgroundColor: theme.vars
+                ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
+                : alpha(theme.palette.background.default, 1),
+              overflow: 'auto',
+            })}
           >
-            <Header />
-            {/* Main content */}
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/all-orders" element={<Orders />} />
-              <Route path="/user-orders" element={<UserOrders />} />
-              <Route path="/order/create-custom" element={<NewCustomOrder />} />
-              <Route path="/order/:orderId" element={<OrderDetail />} />
-              <Route path="/metal-prices" element={<MetalPrices />} />
-              <Route path="/users" element={<Users />} />
-            </Routes>
-          </Stack>
-        </Box>
+            <Stack
+              spacing={2}
+              sx={{
+                alignItems: 'center',
+                mx: 3,
+                pb: 5,
+                mt: { xs: 8, md: 2 },
+              }}
+            >
+              <Header />
+              {/* Main content */}
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/all-orders" element={<Orders />} />
+                <Route path="/user-orders" element={<UserOrders />} />
+                <Route path="/order/create-custom" element={<NewCustomOrder />} />
+                <Route path="/order/:orderId" element={<OrderDetail />} />
+                <Route path="/metal-prices" element={<MetalPrices />} />
+                <Route path="/users" element={<Users />} />
+              </Routes>
+            </Stack>
+          </Box>
 
-        {/* <Box
+          {/* <Box
           component="main"
           sx={(theme) => ({
             flexGrow: 1,
@@ -94,7 +100,8 @@ export default function Dashboard(props) {
             <MainGrid />
           </Stack>
         </Box> */}
-      </Box>
+        </Box>
+      }
     </AppTheme>
   );
 }
