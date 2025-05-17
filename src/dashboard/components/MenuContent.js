@@ -1,4 +1,3 @@
-import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import InventoryIcon from '@mui/icons-material/Inventory';
@@ -16,8 +15,7 @@ const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon />, path: '/' },
   { text: 'Products', icon: <DiamondIcon />, path: '/products' },
   { text: 'All Orders', icon: <InventoryIcon />, path: '/all-orders' },
-  { text: 'User Orders', icon: <InventoryIcon />, path: '/user-orders' },
-  { text: 'Users', icon: <PeopleRoundedIcon />, path: '/users' },
+  { text: 'All Users', icon: <PeopleRoundedIcon />, path: '/all-users' },
   { text: 'Metal Prices', icon: <CurrencyRupeeIcon />, path: '/metal-prices' }
 ];
 

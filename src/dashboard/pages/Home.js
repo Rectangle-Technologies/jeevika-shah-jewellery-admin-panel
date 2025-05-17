@@ -11,7 +11,7 @@ import { enqueueSnackbar } from "notistack"
 
 const Home = () => {
     const columns = [
-        { field: 'id', headerName: 'Order ID', width: 220 },
+        { field: 'id', headerName: 'Order ID', width: 230 },
         { field: 'orderDate', headerName: 'Placed On', width: 170 },
         { field: 'customerName', headerName: 'Customer Name', width: 200 },
         { field: 'status', headerName: 'Status', width: 90 },

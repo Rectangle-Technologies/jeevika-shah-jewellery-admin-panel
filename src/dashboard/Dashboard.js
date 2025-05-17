@@ -23,6 +23,7 @@ import UserOrders from './pages/UserOrders';
 import MetalPrices from './pages/MetalPrices';
 import Users from './pages/Users';
 import Login from './pages/Login';
+import UserDetails from './pages/UserDetails';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -68,11 +69,11 @@ export default function Dashboard(props) {
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/all-orders" element={<Orders />} />
-                <Route path="/user-orders" element={<UserOrders />} />
+                <Route path="/all-users" element={<Users />} />
                 <Route path="/order/create-custom" element={<NewCustomOrder />} />
                 <Route path="/order/:orderId" element={<OrderDetail />} />
                 <Route path="/metal-prices" element={<MetalPrices />} />
-                <Route path="/users" element={<Users />} />
+                <Route path="/user/:userId" element={<UserDetails />} />
               </Routes>
             </Stack>
           </Box>
