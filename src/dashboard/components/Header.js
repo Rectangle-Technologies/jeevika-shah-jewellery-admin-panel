@@ -3,8 +3,16 @@ import Stack from '@mui/material/Stack';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
 
 import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
+  const navigate = useNavigate();
+  
+  const handleLogout = () => {
+    // Perform logout logic here
+    navigate('/login'); // Redirect to the login page after logout
+  }
+
   return (
     <Stack
       direction="row"
@@ -24,7 +32,7 @@ export default function Header() {
           <NotificationsRoundedIcon />
         </MenuButton> */}
         <ColorModeIconDropdown />
-        <Button variant="outlined" startIcon={<LogoutRoundedIcon />}>
+        <Button variant="outlined" onClick={handleLogout} startIcon={<LogoutRoundedIcon />}>
           Logout
         </Button>
     </Stack>
