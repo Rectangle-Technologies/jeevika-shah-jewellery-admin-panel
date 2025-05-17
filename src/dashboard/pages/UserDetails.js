@@ -125,6 +125,9 @@ const UserDetails = () => {
                                             },
                                             width: 755,
                                         }}
+                                        localeText={{
+                                            noRowsLabel: "No orders found for this user."
+                                        }}
                                     />
                                 </Grid>
                             </Grid>

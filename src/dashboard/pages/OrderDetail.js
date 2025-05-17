@@ -10,6 +10,7 @@ import { backendUrl } from '../constants/url'
 import { toIsoWithOffset } from '../helpers/formatDate'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { enqueueSnackbar } from 'notistack'
+import formatAmount from "../helpers/formatAmount"
 
 const OrderDetail = () => {
     const [order, setOrder] = React.useState()
@@ -92,12 +93,12 @@ const OrderDetail = () => {
                                     <CardContent>
                                         <Grid container columns={12}>
                                             <Grid item size={{ xs: 12, md: 6 }}>
-                                                <Typography variant="h6">
+                                                <Typography variant="h6" sx={{ mt: 1 }}>
                                                     Order ID: {order._id}
                                                 </Typography>
                                             </Grid>
                                             <Grid item size={{ xs: 12, md: 6 }} sx={{ display: 'flex', justifyContent: { md: 'flex-end' } }}>
-                                                <Typography variant="h6">
+                                                <Typography variant="h4">
                                                     Order {order.status} {order.status === 'Delivered' && `on ${new Date(order.deliveredOn).toLocaleDateString('en-IN', {
                                                         year: '2-digit',
                                                         month: '2-digit',
@@ -163,10 +164,40 @@ const OrderDetail = () => {
                                 <Card variant="outlined" sx={{ width: '100%' }}>
                                     <CardHeader title="Products" />
                                     <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
-
+                                        {order.products.map((product, index) => (
+                                            <Paper variant="outlined" sx={{ padding: 2, borderRadius: 2, mb: 2 }} key={index}>
+                                                <Grid container spacing={2} columns={12}>
+                                                    <Grid item size={{ xs: 12, md: 8 }}>
+                                                        <Typography sx={{ fontSize: 16 }}>
+                                                            {product.productId.name}
+                                                        </Typography>
+                                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                                            Product ID: {product.productId._id}
+                                                        </Typography>
+                                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                                            Quantity: {product.quantity}
+                                                        </Typography>
+                                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                                            Size: {product.size}
+                                                        </Typography>
+                                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                                            Price: {formatAmount(product.price)}
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
+                                                        <img src={product.productId.images[0]} alt={product.productId.name} style={{ height: '180px', width: 'auto' }} />
+                                                    </Grid>
+                                                </Grid>
+                                            </Paper>
+                                        ))}
+                                        <Box>
+                                            <Typography sx={{ fontSize: 16, ml: 2 }}>
+                                                Total Amount: {formatAmount(order.totalAmount)}
+                                            </Typography>
+                                        </Box>
                                     </CardContent>
                                 </Card>
-                                {order.customOrderDetails.isCustomOrder && 
+                                {order.customOrderDetails.isCustomOrder &&
                                     <Card variant="outlined" sx={{ width: '100%' }}>
                                         <CardHeader title="Order Customization Details" />
                                         <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
