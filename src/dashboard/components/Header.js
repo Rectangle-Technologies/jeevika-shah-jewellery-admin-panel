@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
   const navigate = useNavigate();
-  
+
   const handleLogout = () => {
-    // Perform logout logic here
+    // TODO: Perform logout logic here
     navigate('/login'); // Redirect to the login page after logout
   }
 
