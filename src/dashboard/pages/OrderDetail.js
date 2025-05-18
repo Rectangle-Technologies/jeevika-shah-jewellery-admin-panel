@@ -165,7 +165,7 @@ const OrderDetail = () => {
                                     <CardHeader title="Products" />
                                     <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
                                         {order.products.map((product, index) => (
-                                            <Paper variant="outlined" sx={{ padding: 2, borderRadius: 2, mb: 2 }} key={index}>
+                                            <Paper variant="outlined" sx={{ padding: 2, borderRadius: 2, mt: 2 }} key={index}>
                                                 <Grid container spacing={2} columns={12}>
                                                     <Grid item size={{ xs: 12, md: 8 }}>
                                                         <Typography sx={{ fontSize: 16 }}>
@@ -190,8 +190,8 @@ const OrderDetail = () => {
                                                 </Grid>
                                             </Paper>
                                         ))}
-                                        <Box>
-                                            <Typography sx={{ fontSize: 16, ml: 2 }}>
+                                        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mr: 2 }}>
+                                            <Typography variant='h4' sx={{ ml: 1 }}>
                                                 Total Amount: {formatAmount(order.totalAmount)}
                                             </Typography>
                                         </Box>

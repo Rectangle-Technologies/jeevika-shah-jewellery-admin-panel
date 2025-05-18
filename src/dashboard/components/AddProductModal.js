@@ -155,6 +155,7 @@ const AddProductModal = (props) => {
                                             type='number'
                                             name='quantity'
                                             onChange={handleInputChange}
+                                            value={orderProduct.quantity}
                                         />
                                     </Grid>
                                     <Grid size={6}>
@@ -188,6 +189,7 @@ const AddProductModal = (props) => {
                                         name='price'
                                         onChange={handleInputChange}
                                         startAdornment={<InputAdornment position="start">₹</InputAdornment>}
+                                        value={orderProduct.price}
                                     />
                                 </Box>
                             </Grid>

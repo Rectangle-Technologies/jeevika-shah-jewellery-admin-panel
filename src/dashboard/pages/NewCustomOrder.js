@@ -6,6 +6,7 @@ import AddProductModal from '../components/AddProductModal'
 import authHeader from '../constants/authHeader'
 import { backendUrl } from '../constants/url'
 import formatAmount from '../helpers/formatAmount'
+import EditProductModal from '../components/EditProductModal'
 
 const NewCustomOrder = () => {
     const [phone, setPhone] = React.useState('')
@@ -16,6 +17,7 @@ const NewCustomOrder = () => {
     const [products, setProducts] = React.useState([])
     const [addProductModalOpen, setAddProductModalOpen] = React.useState(false)
     const [editProductModalOpen, setEditProductModalOpen] = React.useState(false)
+    const [editProductIndex, setEditProductIndex] = React.useState(-1)
     const MobileNumberRegex = /^[6-9][0-9]{9}$/
 
     const handleAddModalOpen = () => setAddProductModalOpen(true);
@@ -182,6 +184,7 @@ const NewCustomOrder = () => {
                                         variant='contained'
                                         color='primary'
                                         onClick={() => {
+                                            setEditProductIndex(index)
                                             setEditProductModalOpen(true)
                                         }}
                                     >Edit</Button>
@@ -206,6 +209,13 @@ const NewCustomOrder = () => {
                     <AddProductModal
                         open={addProductModalOpen}
                         handleClose={handleAddModalClose}
+                        setProducts={setProducts}
+                    />
+                    <EditProductModal
+                        open={editProductModalOpen}
+                        handleClose={() => setEditProductModalOpen(false)}
+                        editProductIndex={editProductIndex}
+                        products={products}
                         setProducts={setProducts}
                     />
                 </>
