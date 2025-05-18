@@ -1,10 +1,10 @@
 import { Box, Button, Grid, OutlinedInput, Paper, TextField, Typography } from '@mui/material'
 import axios from 'axios'
-import React from 'react'
-import { backendUrl } from '../constants/url'
-import authHeader from '../constants/authHeader'
 import { enqueueSnackbar } from 'notistack'
-import ProductModal from '../components/ProductModal'
+import React from 'react'
+import AddProductModal from '../components/AddProductModal'
+import authHeader from '../constants/authHeader'
+import { backendUrl } from '../constants/url'
 import formatAmount from '../helpers/formatAmount'
 
 const NewCustomOrder = () => {
@@ -14,11 +14,12 @@ const NewCustomOrder = () => {
     const [user, setUser] = React.useState(null)
     const [customOrderDescription, setCustomOrderDescription] = React.useState()
     const [products, setProducts] = React.useState([])
-    const [productModalOpen, setProductModalOpen] = React.useState(false)
+    const [addProductModalOpen, setAddProductModalOpen] = React.useState(false)
+    const [editProductModalOpen, setEditProductModalOpen] = React.useState(false)
     const MobileNumberRegex = /^[6-9][0-9]{9}$/
 
-    const handleOpen = () => setProductModalOpen(true);
-    const handleClose = () => setProductModalOpen(false);
+    const handleAddModalOpen = () => setAddProductModalOpen(true);
+    const handleAddModalClose = () => setAddProductModalOpen(false);
 
     const handleSearch = async () => {
         try {
@@ -168,12 +169,29 @@ const NewCustomOrder = () => {
                                         <img src={product.image} alt={product.name} style={{ height: '180px', width: 'auto' }} />
                                     </Grid>
                                 </Grid>
+                                <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                    <Button
+                                        variant='contained'
+                                        color='error'
+                                        onClick={() => {
+                                            setProducts(products.filter((_, i) => i !== index))
+                                        }}
+                                        sx={{ mr: 2 }}
+                                    >Delete</Button>
+                                    <Button
+                                        variant='contained'
+                                        color='primary'
+                                        onClick={() => {
+                                            setEditProductModalOpen(true)
+                                        }}
+                                    >Edit</Button>
+                                </Box>
                             </Paper>
                         ))}
                         <Button
                             variant='contained'
                             sx={{ mb: 2 }}
-                            onClick={handleOpen}
+                            onClick={handleAddModalOpen}
                         >Add Product</Button>
                     </Grid>
                     <Grid size={12}>
@@ -185,9 +203,9 @@ const NewCustomOrder = () => {
                             loading={isSubmitLoading}
                         >Create Order</Button>
                     </Grid>
-                    <ProductModal
-                        open={productModalOpen}
-                        handleClose={handleClose}
+                    <AddProductModal
+                        open={addProductModalOpen}
+                        handleClose={handleAddModalClose}
                         setProducts={setProducts}
                     />
                 </>

@@ -5,7 +5,7 @@ import React from 'react'
 import { backendUrl } from '../constants/url';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-const ProductModal = (props) => {
+const AddProductModal = (props) => {
     const [productUrl, setProductUrl] = React.useState('')
     const [product, setProduct] = React.useState(null)
     const [orderProduct, setOrderProduct] = React.useState(null)
@@ -218,4 +218,4 @@ const ProductModal = (props) => {
     )
 }
 
-export default ProductModal
+export default AddProductModal
