@@ -67,7 +67,7 @@ export default function Dashboard(props) {
               {/* Main content */}
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/products" element={<Products />} />
+                <Route path="/all-products" element={<Products />} />
                 <Route path="/all-orders" element={<Orders />} />
                 <Route path="/all-users" element={<Users />} />
                 <Route path="/order/create-custom" element={<NewCustomOrder />} />

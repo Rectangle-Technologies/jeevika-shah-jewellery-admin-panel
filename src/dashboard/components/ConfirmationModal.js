@@ -44,12 +44,12 @@ const ConfirmationModal = (props) => {
                     This action cannot be undone.
                 </Typography>
                 <Grid container columns={12} sx={{ mt: 3, display: 'flex', justifyContent: 'space-between' }}>
-                    <Grid item xs={6}>
+                    <Grid>
                         <Button variant="contained" color='error' onClick={props.handleClose}>
                             No
                         </Button>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid>
                         <Button variant="outlined" onClick={handleSubmit} loading={isLoading}>
                             Confirm
                         </Button>

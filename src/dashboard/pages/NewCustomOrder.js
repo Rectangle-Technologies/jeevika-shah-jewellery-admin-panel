@@ -1,9 +1,11 @@
-import { Box, Button, Grid, OutlinedInput, TextField, Typography } from '@mui/material'
+import { Box, Button, Grid, OutlinedInput, Paper, TextField, Typography } from '@mui/material'
 import axios from 'axios'
 import React from 'react'
 import { backendUrl } from '../constants/url'
 import authHeader from '../constants/authHeader'
 import { enqueueSnackbar } from 'notistack'
+import ProductModal from '../components/ProductModal'
+import formatAmount from '../helpers/formatAmount'
 
 const NewCustomOrder = () => {
     const [phone, setPhone] = React.useState('')
@@ -11,21 +13,12 @@ const NewCustomOrder = () => {
     const [isSubmitLoading, setIsSubmitLoading] = React.useState(false)
     const [user, setUser] = React.useState(null)
     const [customOrderDescription, setCustomOrderDescription] = React.useState()
-    const [products, setProducts] = React.useState([
-        {
-            productId: "60f6f9cf8a1a2c001cfb3b0a",
-            quantity: 1,
-            price: 103245.23,
-            size: "14 cm"
-        },
-        {
-            productId: "60f6f9cf8a1a2c001cfb3b0a",
-            quantity: 1,
-            price: 203245.23,
-            size: "14 cm"
-        }
-    ])
+    const [products, setProducts] = React.useState([])
+    const [productModalOpen, setProductModalOpen] = React.useState(false)
     const MobileNumberRegex = /^[6-9][0-9]{9}$/
+
+    const handleOpen = () => setProductModalOpen(true);
+    const handleClose = () => setProductModalOpen(false);
 
     const handleSearch = async () => {
         try {
@@ -52,7 +45,7 @@ const NewCustomOrder = () => {
         }
     }
 
-    const handlSubmit = async () => { 
+    const handlSubmit = async () => {
         setIsSubmitLoading(true)
         try {
             if (!customOrderDescription || customOrderDescription.length === 0) {
@@ -79,8 +72,7 @@ const NewCustomOrder = () => {
             await axios.post(`${backendUrl}/order/create-custom`, orderData, { headers: authHeader })
 
             setCustomOrderDescription('')
-            // TODO: Uncomment this when the API is ready
-            // setProducts([])
+            setProducts([])
             setUser(null)
             enqueueSnackbar("Order created successfully", {
                 autoHideDuration: 2000,
@@ -103,7 +95,7 @@ const NewCustomOrder = () => {
                 Create Custom Order
             </Typography>
             <Grid container spacing={2} sx={{ mt: 3, display: 'flex' }}>
-                <Grid item size={4}>
+                <Grid size={4}>
                     <TextField
                         placeholder='Mobile Number'
                         fullWidth
@@ -118,7 +110,7 @@ const NewCustomOrder = () => {
                         }}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <Button
                         variant='outlined'
                         onClick={handleSearch}
@@ -130,7 +122,7 @@ const NewCustomOrder = () => {
             </Grid>
             <Grid container spacing={2} sx={{ mt: 3, display: 'flex' }}>
                 {user && (<>
-                    <Grid item size={12}>
+                    <Grid size={12}>
                         <Typography sx={{ mb: 2, fontSize: 16 }}>
                             Name: {user.name}
                         </Typography>
@@ -138,7 +130,7 @@ const NewCustomOrder = () => {
                             Contact: {user.phone}
                         </Typography>
                     </Grid>
-                    <Grid item size={12}>
+                    <Grid size={12}>
                         <Typography variant="h4" sx={{ mb: 2 }}>Custom Order Details</Typography>
                         <OutlinedInput
                             placeholder='Description'
@@ -150,14 +142,41 @@ const NewCustomOrder = () => {
                             onChange={(e) => setCustomOrderDescription(e.target.value)}
                         />
                     </Grid>
-                    <Grid item size={12}>
+                    <Grid size={12}>
                         <Typography variant="h4" sx={{ mb: 2 }}>Products</Typography>
+                        {products.map((product, index) => (
+                            <Paper variant="outlined" sx={{ padding: 2, borderRadius: 2, mb: 2 }} key={index}>
+                                <Grid container spacing={2} columns={12}>
+                                    <Grid size={{ xs: 12, md: 8 }}>
+                                        <Typography sx={{ fontSize: 16 }}>
+                                            {product.name}
+                                        </Typography>
+                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                            Product ID: {product.productId}
+                                        </Typography>
+                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                            Quantity: {product.quantity}
+                                        </Typography>
+                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                            Size: {product.size}
+                                        </Typography>
+                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                            Price: {formatAmount(product.price)}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
+                                        <img src={product.image} alt={product.name} style={{ height: '180px', width: 'auto' }} />
+                                    </Grid>
+                                </Grid>
+                            </Paper>
+                        ))}
                         <Button
                             variant='contained'
                             sx={{ mb: 2 }}
+                            onClick={handleOpen}
                         >Add Product</Button>
                     </Grid>
-                    <Grid item size={12}>
+                    <Grid size={12}>
                         <Button
                             variant='contained'
                             fullWidth
@@ -166,6 +185,11 @@ const NewCustomOrder = () => {
                             loading={isSubmitLoading}
                         >Create Order</Button>
                     </Grid>
+                    <ProductModal
+                        open={productModalOpen}
+                        handleClose={handleClose}
+                        setProducts={setProducts}
+                    />
                 </>
                 )}
             </Grid>
