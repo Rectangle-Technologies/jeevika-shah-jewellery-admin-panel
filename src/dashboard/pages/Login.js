@@ -1,12 +1,39 @@
 import { Box, Button, Grid, OutlinedInput, Typography } from '@mui/material'
 import React from 'react'
+import { backendUrl } from '../constants/url';
 
 const Login = () => {
     const [email, setEmail] = React.useState()
     const [password, setPassword] = React.useState()
     const [loading, setLoading] = React.useState(false)
 
-    const handleLogin = () => { }
+    const handleLogin = () => {
+        setLoading(true)
+        fetch(`${backendUrl}/user/admin/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email,
+                otp2fa: password
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                setLoading(false)
+                if (data.status === 'success') {
+                    localStorage.setItem('token', data.token)
+                    window.location.href = '/dashboard'
+                } else {
+                    alert(data.message)
+                }
+            })
+            .catch(err => {
+                setLoading(false)
+                alert('Something went wrong')
+            })
+    }
 
     return (
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
