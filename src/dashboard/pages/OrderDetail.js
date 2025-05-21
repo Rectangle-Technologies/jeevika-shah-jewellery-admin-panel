@@ -5,7 +5,7 @@ import axios from 'axios'
 import React from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import ConfirmationModal from '../components/ConfirmationModal'
-import authHeader from '../constants/authHeader'
+import getAuthHeader from '../constants/authHeader'
 import { backendUrl } from '../constants/url'
 import { toIsoWithOffset } from '../helpers/formatDate'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -24,7 +24,7 @@ const OrderDetail = () => {
 
     const fetchOrder = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/order/get/${orderId}`, { headers: authHeader })
+            const response = await axios.get(`${backendUrl}/order/get/${orderId}`, { headers: getAuthHeader() })
             setOrder(response.data.body)
         } catch (error) {
             console.error('Error fetching order:', error)
@@ -55,7 +55,7 @@ const OrderDetail = () => {
                 status,
                 deliveredOn: status === 'Delivered' ? toIsoWithOffset(new Date(deliveredOn)) : null
             }
-            await axios.post(`${backendUrl}/order/update-status/${orderId}`, payload, { headers: authHeader })
+            await axios.post(`${backendUrl}/order/update-status/${orderId}`, payload, { headers: getAuthHeader() })
             enqueueSnackbar(`Order marked as ${status} successfully`, {
                 autoHideDuration: 2000,
                 variant: "success",

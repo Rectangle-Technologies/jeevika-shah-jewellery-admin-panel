@@ -1,39 +1,67 @@
 import { Box, Button, Grid, OutlinedInput, Typography } from '@mui/material'
 import React from 'react'
 import { backendUrl } from '../constants/url';
+import axios from 'axios';
+import { enqueueSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = React.useState()
     const [password, setPassword] = React.useState()
     const [loading, setLoading] = React.useState(false)
+    const navigate = useNavigate()
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         setLoading(true)
-        fetch(`${backendUrl}/user/admin/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
+        try {
+            const response = await axios.post(`${backendUrl}/user/admin/login`, {
                 email,
                 otp2fa: password
-            })
-        })
-            .then(res => res.json())
-            .then(data => {
-                setLoading(false)
-                if (data.status === 'success') {
-                    localStorage.setItem('token', data.token)
-                    window.location.href = '/dashboard'
-                } else {
-                    alert(data.message)
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
                 }
+            });
+            setLoading(false)
+            const data = response.data;
+            if (data.result === 'SUCCESS') {
+                localStorage.setItem('token', data.body.token)
+                navigate('/')
+            } else {
+                enqueueSnackbar(data.message, {
+                    autoHideDuration: 2000,
+                    variant: 'error',
+                })
+            }
+        } catch (err) {
+            setLoading(false)
+            enqueueSnackbar(err?.response?.data?.message || "Error logging in", {
+                autoHideDuration: 2000,
+                variant: 'error',
             })
-            .catch(err => {
-                setLoading(false)
-                alert('Something went wrong')
-            })
+        }
     }
+
+    React.useEffect(() => {
+        const token = localStorage.getItem('token')
+        const verifyToken = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await axios.post(`${backendUrl}/user/verify-token`, {}, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (response.data.result === 'SUCCESS') {
+                    navigate('/');
+                }
+            } catch (err) {
+                console.log(err);
+                localStorage.removeItem('token');
+            }
+        };
+        if (token) {
+            verifyToken()
+        }
+    }, [])
 
     return (
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -51,10 +79,15 @@ const Login = () => {
                 </Grid>
                 <Grid item size={12}>
                     <OutlinedInput
-                        placeholder="Password"
+                        placeholder="OTP"
                         sx={{ width: '300px', mb: 2 }}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleLogin()
+                            }
+                        }}
                     />
                 </Grid>
                 <Grid item size={12}>

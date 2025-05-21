@@ -3,7 +3,7 @@ import axios from 'axios'
 import React from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { backendUrl } from '../constants/url'
-import authHeader from '../constants/authHeader'
+import getAuthHeader from '../constants/authHeader'
 import { enqueueSnackbar } from 'notistack'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import formatAmount from '../helpers/formatAmount'
@@ -26,8 +26,8 @@ const UserDetails = () => {
 
     const fetchUser = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/user/get/${userId}`, { headers: authHeader })
-            const orderResponse = await axios.get(`${backendUrl}/order/get-user/${response.data.body._id}`, { headers: authHeader })
+            const response = await axios.get(`${backendUrl}/user/get/${userId}`, { headers: getAuthHeader() })
+            const orderResponse = await axios.get(`${backendUrl}/order/get-user/${response.data.body._id}`, { headers: getAuthHeader() })
             setUser(response.data.body)
             setOrders(orderResponse.data.body.orders.map((order, index) => ({
                 id: order._id,

@@ -11,7 +11,7 @@ import {
   datePickersCustomizations,
   treeViewCustomizations,
 } from './theme/customizations';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import { Stack } from '@mui/material';
 import MainGrid from './components/MainGrid';
@@ -24,6 +24,9 @@ import MetalPrices from './pages/MetalPrices';
 import Users from './pages/Users';
 import Login from './pages/Login';
 import UserDetails from './pages/UserDetails';
+import React from 'react';
+import axios from 'axios';
+import { backendUrl } from './constants/url';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -35,6 +38,31 @@ const xThemeComponents = {
 export default function Dashboard(props) {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const verifyToken = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token && !isLoginPage) {
+          navigate('/login');
+        }
+        const response = await axios.post(`${backendUrl}/user/verify-token`, {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (response.data.result !== 'SUCCESS' && !isLoginPage) {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
+      } catch (err) {
+        console.log(err);
+        localStorage.removeItem('token');
+        navigate('/login');
+      }
+    };
+    verifyToken();
+  }, [isLoginPage]);
+
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />

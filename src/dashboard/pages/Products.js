@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material"
 import { enqueueSnackbar } from "notistack"
 import React from "react"
 import { backendUrl } from "../constants/url"
-import authHeader from "../constants/authHeader"
+import getAuthHeader from "../constants/authHeader"
 import axios from "axios"
 
 const Products = () => {
@@ -11,7 +11,7 @@ const Products = () => {
 
     const fetchProducts = async () => {
         try { 
-            const response = await axios.get(`${backendUrl}/products/get-all`, { headers: authHeader })
+            const response = await axios.get(`${backendUrl}/products/get-all`, { headers: getAuthHeader() })
             console.log(response.data)
             // setProducts(response.data.body.products)
         } catch (error) {

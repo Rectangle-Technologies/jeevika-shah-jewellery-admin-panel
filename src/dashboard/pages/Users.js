@@ -3,7 +3,7 @@ import { enqueueSnackbar } from 'notistack'
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { backendUrl } from '../constants/url'
-import authHeader from '../constants/authHeader'
+import getAuthHeader from '../constants/authHeader'
 import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios'
 
@@ -26,7 +26,7 @@ const Users = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/user/get-all?pageNo=${page}&pageSize=${rowsPerPage}`, { headers: authHeader })
+            const response = await axios.get(`${backendUrl}/user/get-all?pageNo=${page}&pageSize=${rowsPerPage}`, { headers: getAuthHeader() })
             setRows(response.data.body.users.map((user, index) => ({
                 id: user._id,
                 name: user.name,
@@ -64,7 +64,7 @@ const Users = () => {
                 return
             }
             setIsLoading(true)
-            const response = await axios.post(`${backendUrl}/user/get/phone`, { phone }, { headers: authHeader })
+            const response = await axios.post(`${backendUrl}/user/get/phone`, { phone }, { headers: getAuthHeader() })
             setRows([{
                 id: response.data.body._id,
                 name: response.data.body.name,

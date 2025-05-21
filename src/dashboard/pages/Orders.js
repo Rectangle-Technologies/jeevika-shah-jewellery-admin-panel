@@ -5,7 +5,7 @@ import formatAmount from '../helpers/formatAmount'
 import { DataGrid } from '@mui/x-data-grid'
 import { Box, Button, Grid, Pagination, Typography } from '@mui/material'
 import { backendUrl } from '../constants/url'
-import authHeader from '../constants/authHeader'
+import getAuthHeader from '../constants/authHeader'
 import { enqueueSnackbar } from 'notistack'
 
 const Orders = () => {
@@ -27,7 +27,7 @@ const Orders = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/order/get-all?pageNo=${page}&pageSize=${rowsPerPage}`, { headers: authHeader })
+            const response = await axios.get(`${backendUrl}/order/get-all?pageNo=${page}&pageSize=${rowsPerPage}`, { headers: getAuthHeader() })
             setRows(response.data.body.orders.map((order, index) => ({
                 id: order._id,
                 orderDate: new Date(order.createdAt).toLocaleDateString('en-IN', {

@@ -1,5 +1,8 @@
-const authHeader = {
-    Authorization: `Bearer bea3e62ef6c5043145412ec0a8baf29494522accd9c57d561d0204d80ec2ef850918a4ad0fd2e421710fff03d548de51f2e4f9c2103db17d0f689278835bb50fc3d0731ae4e4fa87ab233ff1b56a0ca528e3198b9f4bf972864566c22f3221002a673f6c13b4e830464c69b1cdee0a6076220cadcfbeb23eb79f9ee15444a448afa860b30bb8b8880a3e61b9f67d7291446e0ad7b2f6e9e2236168f4c3277cb8160bf950988d60bf5bf23b62f02a0a4e55baf092f9b2fe4b5305a32ad678bff35ca7bc5cfe373683.eae08b30a1da669fdda152e249f15e27`
+const getAuthHeader = () => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        return { Authorization: `Bearer ${token}` };
+    }
 }
 
-export default authHeader;
+export default getAuthHeader;

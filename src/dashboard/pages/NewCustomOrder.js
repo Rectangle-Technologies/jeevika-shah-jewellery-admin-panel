@@ -3,7 +3,7 @@ import axios from 'axios'
 import { enqueueSnackbar } from 'notistack'
 import React from 'react'
 import AddProductModal from '../components/AddProductModal'
-import authHeader from '../constants/authHeader'
+import getAuthHeader from '../constants/authHeader'
 import { backendUrl } from '../constants/url'
 import formatAmount from '../helpers/formatAmount'
 import EditProductModal from '../components/EditProductModal'
@@ -33,7 +33,7 @@ const NewCustomOrder = () => {
                 return
             }
             setIsLoading(true)
-            const response = await axios.post(`${backendUrl}/user/get/phone`, { phone }, { headers: authHeader })
+            const response = await axios.post(`${backendUrl}/user/get/phone`, { phone }, { headers: getAuthHeader() })
             setUser(response.data.body)
             setPhone('')
         } catch (error) {
@@ -72,7 +72,7 @@ const NewCustomOrder = () => {
                 },
                 products
             }
-            await axios.post(`${backendUrl}/order/create-custom`, orderData, { headers: authHeader })
+            await axios.post(`${backendUrl}/order/create-custom`, orderData, { headers: getAuthHeader() })
 
             setCustomOrderDescription('')
             setProducts([])

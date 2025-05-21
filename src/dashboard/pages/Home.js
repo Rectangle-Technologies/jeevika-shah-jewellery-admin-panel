@@ -2,7 +2,7 @@ import { Box, Grid, Typography } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import axios from "axios"
 import React, { useEffect } from "react"
-import authHeader from "../constants/authHeader"
+import getAuthHeader from "../constants/authHeader"
 import formatAmount from "../helpers/formatAmount"
 import { backendUrl } from "../constants/url"
 import { useNavigate } from "react-router-dom"
@@ -41,7 +41,7 @@ const Home = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`${backendUrl}/dashboard/get-data`, { headers: authHeader })
+            const response = await axios.get(`${backendUrl}/dashboard/get-data`, { headers: getAuthHeader() })
             setRows(response.data.body.recentOrders.map((order, index) => ({
                 id: order._id,
                 orderDate: new Date(order.createdAt).toLocaleDateString('en-IN', {
@@ -76,7 +76,10 @@ const Home = () => {
     }
 
     useEffect(() => {
-        fetchOrders()
+        const token = localStorage.getItem('token')
+        if (token) {
+            fetchOrders()
+        }
     }, [])
 
     return (

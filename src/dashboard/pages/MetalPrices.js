@@ -2,7 +2,7 @@ import { Box, Button, CircularProgress, Grid, InputAdornment, OutlinedInput, Typ
 import axios from 'axios'
 import { enqueueSnackbar } from 'notistack'
 import React from 'react'
-import authHeader from '../constants/authHeader'
+import getAuthHeader from '../constants/authHeader'
 import { backendUrl } from '../constants/url'
 
 const MetalPrices = () => {
@@ -13,7 +13,7 @@ const MetalPrices = () => {
     const fetchPrices = async () => {
         setIsLoading(true)
         try {
-            const response = await axios.get(`${backendUrl}/price/get`, { headers: authHeader })
+            const response = await axios.get(`${backendUrl}/price/get`, { headers: getAuthHeader() })
             setPrices(response.data.body)
         } catch (error) {
             console.error('Error fetching prices:', error)
@@ -45,12 +45,11 @@ const MetalPrices = () => {
                 });
                 return
             }
-            console.log(prices)
             await axios.post(`${backendUrl}/price/update`, { 
                 goldPricePerGram: prices?.goldPricePerGram,
                 naturalDiamondPricePerCarat: prices?.naturalDiamondPricePerCarat,
                 labDiamondPricePerCarat: prices?.labDiamondPricePerCarat
-             }, { headers: authHeader })
+             }, { headers: getAuthHeader() })
             enqueueSnackbar("Prices updated successfully", {
                 autoHideDuration: 2000,
                 variant: "success",

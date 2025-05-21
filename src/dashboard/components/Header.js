@@ -9,7 +9,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // TODO: Perform logout logic here
+    localStorage.removeItem('token'); // Remove the token from local storage
     navigate('/login'); // Redirect to the login page after logout
   }
 
