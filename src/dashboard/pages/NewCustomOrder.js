@@ -7,6 +7,7 @@ import getAuthHeader from '../constants/authHeader'
 import { backendUrl } from '../constants/url'
 import formatAmount from '../helpers/formatAmount'
 import EditProductModal from '../components/EditProductModal'
+import { formatDiamondType } from '../helpers/formatDiamondType'
 
 const NewCustomOrder = () => {
     const [phone, setPhone] = React.useState('')
@@ -164,11 +165,14 @@ const NewCustomOrder = () => {
                                             Size: {product.size}
                                         </Typography>
                                         <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                            Diamond Type: {formatDiamondType(product.diamondType)}
+                                        </Typography>
+                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
                                             Price: {formatAmount(product.price)}
                                         </Typography>
                                     </Grid>
                                     <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
-                                        <img src={product.image} alt={product.name} style={{ height: '180px', width: 'auto' }} />
+                                        <img src={product.image} alt={product.name} style={{ height: '200px', width: 'auto' }} />
                                     </Grid>
                                 </Grid>
                                 <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>

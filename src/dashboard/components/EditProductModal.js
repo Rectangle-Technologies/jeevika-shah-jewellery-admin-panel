@@ -22,6 +22,10 @@ const EditProductModal = (props) => {
         boxShadow: 24,
         p: 4,
     };
+    const diamondTypes = [
+        { value: 'natural', label: 'Natural' },
+        { value: 'lab-grown', label: 'Lab Grown' },
+    ]
 
     const fetchProduct = async () => {
         setIsLoading(true)
@@ -152,6 +156,29 @@ const EditProductModal = (props) => {
                                             value={orderProduct.price}
                                         />
                                     </Box>
+                                    <Select
+                                        fullWidth
+                                        value={orderProduct?.diamondType || ''}
+                                        onChange={handleInputChange}
+                                        input={<OutlinedInput />}
+                                        name='diamondType'
+                                        IconComponent={KeyboardArrowDownIcon}
+                                        displayEmpty
+                                        renderValue={(selected) => {
+                                            if (!selected) {
+                                                return <span style={{ color: '#aaa' }}>Select Diamond Type</span>; // Placeholder text
+                                            }
+                                            const found = diamondTypes.find(type => type.value === selected);
+                                            return found ? found.label : selected;
+                                        }}
+                                        sx={{ mt: 2 }}
+                                    >
+                                        {diamondTypes.map((type, index) => (
+                                            <MenuItem key={index} value={type.value}>
+                                                {type.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
                                 </Grid>
                                 <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
                                     <img src={product.images[0]} alt={product.name} style={{ height: '180px', width: 'auto' }} />

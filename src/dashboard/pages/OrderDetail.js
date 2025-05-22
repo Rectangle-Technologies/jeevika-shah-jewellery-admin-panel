@@ -11,6 +11,7 @@ import { toIsoWithOffset } from '../helpers/formatDate'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { enqueueSnackbar } from 'notistack'
 import formatAmount from "../helpers/formatAmount"
+import { formatDiamondType } from '../helpers/formatDiamondType'
 
 const OrderDetail = () => {
     const [order, setOrder] = React.useState()
@@ -181,11 +182,14 @@ const OrderDetail = () => {
                                                             Size: {product.size}
                                                         </Typography>
                                                         <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                                            Diamond Type: {formatDiamondType(product.diamondType)}
+                                                        </Typography>
+                                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
                                                             Price: {formatAmount(product.price)}
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
-                                                        <img src={product.productId.images[0]} alt={product.productId.name} style={{ height: '180px', width: 'auto' }} />
+                                                        <img src={product.productId.images[0]} alt={product.productId.name} style={{ height: '200px', width: 'auto' }} />
                                                     </Grid>
                                                 </Grid>
                                             </Paper>
