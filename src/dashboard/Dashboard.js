@@ -1,32 +1,31 @@
 
+import { Stack } from '@mui/material';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
+import axios from 'axios';
+import React from 'react';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import AppTheme from '../shared-theme/AppTheme';
 import AppNavbar from './components/AppNavbar';
-import SideMenu from './components/SideMenu';
 import Header from './components/Header';
+import SideMenu from './components/SideMenu';
+import { backendUrl } from './constants/url';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import MetalPrices from './pages/MetalPrices';
+import NewCustomOrder from './pages/NewCustomOrder';
+import OrderDetail from './pages/OrderDetail';
+import Orders from './pages/Orders';
+import Products from './pages/Products';
+import UserDetails from './pages/UserDetails';
+import Users from './pages/Users';
 import {
   chartsCustomizations,
   dataGridCustomizations,
   datePickersCustomizations,
   treeViewCustomizations,
 } from './theme/customizations';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import Home from './pages/Home';
-import { Stack } from '@mui/material';
-import MainGrid from './components/MainGrid';
-import OrderDetail from './pages/OrderDetail';
-import Products from './pages/Products';
-import Orders from './pages/Orders';
-import NewCustomOrder from './pages/NewCustomOrder';
-import UserOrders from './pages/UserOrders';
-import MetalPrices from './pages/MetalPrices';
-import Users from './pages/Users';
-import Login from './pages/Login';
-import UserDetails from './pages/UserDetails';
-import React from 'react';
-import axios from 'axios';
-import { backendUrl } from './constants/url';
+import HomeContent from './pages/HomeContent';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -102,6 +101,7 @@ export default function Dashboard(props) {
                 <Route path="/order/:orderId" element={<OrderDetail />} />
                 <Route path="/metal-prices" element={<MetalPrices />} />
                 <Route path="/user/:userId" element={<UserDetails />} />
+                <Route path="/home-content" element={<HomeContent />} />
               </Routes>
             </Stack>
           </Box>
