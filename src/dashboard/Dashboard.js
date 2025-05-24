@@ -43,15 +43,18 @@ export default function Dashboard(props) {
     const verifyToken = async () => {
       try {
         const token = localStorage.getItem('token');
-        if (!token && !isLoginPage) {
+        if ((token === null || token === undefined || token === '') && !isLoginPage) {
           navigate('/login');
+          return
         }
-        const response = await axios.post(`${backendUrl}/user/verify-token`, {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (response.data.result !== 'SUCCESS' && !isLoginPage) {
-          localStorage.removeItem('token');
-          navigate('/login');
+        if (token !== null && token !== undefined && token !== '') {
+          const response = await axios.post(`${backendUrl}/user/verify-token`, {}, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (response.data.result !== 'SUCCESS' && !isLoginPage) {
+            localStorage.removeItem('token');
+            navigate('/login');
+          }
         }
       } catch (err) {
         console.log(err);
