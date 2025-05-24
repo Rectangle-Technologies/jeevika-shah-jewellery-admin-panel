@@ -58,7 +58,6 @@ const Login = () => {
                 localStorage.removeItem('token');
             }
         };
-        console.log("Token:", token)
         if (token !== null && token !== undefined && token !== '') {
             verifyToken()
         }
