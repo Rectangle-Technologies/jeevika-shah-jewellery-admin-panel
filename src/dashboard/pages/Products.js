@@ -19,6 +19,7 @@ import {
     Dialog,
     AppBar,
     Toolbar,
+    Avatar,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -29,6 +30,7 @@ import getAuthHeader from "../constants/authHeader";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const defaultSize = { displayName: "", weightOfMetal: "" };
 
@@ -50,7 +52,7 @@ const ProductForm = () => {
         name: "",
         description: "",
         category: "",
-        images: [""],
+        images: [],
         sizes: [{ ...defaultSize }],
         karatOfGold: "",
         weightOfGold: "",
@@ -131,17 +133,27 @@ const ProductForm = () => {
                 setLoading(false);
                 return;
             }
-            await axios.post(
-                `${backendUrl}/products/new`,
-                payload,
-                { headers: getAuthHeader() }
-            );
+            if (actionButtonText === "Update Product" && form.id) {
+                // Edit mode: update existing product
+                await axios.post(
+                    `${backendUrl}/products/update/${form.id}`,
+                    payload,
+                    { headers: getAuthHeader() }
+                );
+            } else {
+                // Create mode: create new product
+                await axios.post(
+                    `${backendUrl}/products/new`,
+                    payload,
+                    { headers: getAuthHeader() }
+                );
+            }
             enqueueSnackbar("Product created!", { variant: "success" });
             setForm({
                 name: "",
                 description: "",
                 category: "",
-                images: [""],
+                images: [],
                 sizes: [{ ...defaultSize }],
                 karatOfGold: "",
                 weightOfGold: "",
@@ -154,6 +166,32 @@ const ProductForm = () => {
                 isLabDiamond: false,
                 isActive: true,
             });
+            setModalOpen(false);
+            // Refresh products list
+            const res = await axios.get(`${backendUrl}/products/get-all`, {
+                headers: getAuthHeader(),
+            });
+            const updatedProducts = res.data.body.products.map(product => ({
+                ...product,
+                id: product._id, // Ensure id field is set for DataGrid
+                createdAt: new Date(product.createdAt).toLocaleDateString('en-IN', {
+                    year: '2-digit',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                }),
+                updatedAt: new Date(product.updatedAt).toLocaleDateString('en-IN', {
+                    year: '2-digit',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                }),
+            }));
+            setProducts(updatedProducts);
         } catch (error) {
             enqueueSnackbar(error?.response?.data?.message || "Error creating product", { variant: "error" });
         } finally {
@@ -181,6 +219,14 @@ const ProductForm = () => {
                 productsRes.data.body.products.forEach(product => {
                     product.id = product._id; // Ensure id field is set for DataGrid
                     product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
+                    product.updatedAt = new Date(product.updatedAt).toLocaleDateString('en-IN', {
                         year: '2-digit',
                         month: '2-digit',
                         day: '2-digit',
@@ -233,47 +279,33 @@ const ProductForm = () => {
 
     const columnsProduct = [
         { field: 'id', headerName: 'Product ID', width: 230 },
-        { field: 'name', headerName: 'Name', width: 200, renderCell: (params) => {
-            
-            return <Button variant="text" onClick={() => {
-                setModalOpen(true)
-                setForm({
-                    ...params.row,
-                    images: params.row.images || [""],
-                });
-                setDialogBoxText("Edit Product");
-            }}>{params.value}</Button>;
-        }},
+        {
+            field: 'name', headerName: 'Name', width: 200, renderCell: (params) => {
+
+                return <Button variant="text" onClick={() => {
+                    setModalOpen(true)
+                    var images = params.row.images || [];
+                    // Decode HTML entities in images
+                    images = images.map(img => {
+                        const txt = document.createElement("textarea");
+                        txt.innerHTML = img;
+                        return txt.value; // Decode HTML entities if any
+                    });
+
+                    setForm({
+                        ...params.row,
+                        images: images,
+                    });
+                    setDialogBoxText("Edit Product");
+                    setActionButtonText("Update Product");
+                }}>{params.value}</Button>;
+            }
+        },
         { field: 'category', headerName: 'Category', width: 150 },
         { field: 'description', headerName: 'Description', width: 250 },
-        { field: 'images', headerName: 'Images', width: 200, renderCell: (params) => {
-            const [isOpen, setIsOpen] = React.useState(false);
-            const OpenImageDialog = () => {
-                setIsOpen(true);
-            }
-            const handleClose = () => {
-                setIsOpen(false);
-            }
-            return (
-                <React.Fragment>
-                    <Button variant="text" onClick={OpenImageDialog}>
-                        View Images
-                    </Button>
-                    <Dialog open={isOpen} onClose={handleClose} maxWidth="xl" fullWidth>
-                        <Box sx={{ p: 2, display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-                            {params.value.map((img, index) => (
-                                <img key={index} src={img} alt={`Product ${params.row.id} Image ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }} />
-                            ))}
-                        </Box>
-                    </Dialog>
-                </React.Fragment>
-            );
-        }},
         { field: 'isActive', headerName: 'Active', width: 100, type: 'boolean' },
         { field: 'createdAt', headerName: 'Created On', width: 180 },
     ]
-
-    console.log("Products:", products);
 
     return (
         <React.Fragment>
@@ -290,8 +322,8 @@ const ProductForm = () => {
                             name: "",
                             description: "",
                             category: categories[0] || "",
-                            images: [""],
-                            sizes: [{ ...defaultSize }],
+                            images: [],
+                            sizes: [ ...sizes ],
                             karatOfGold: "",
                             weightOfGold: "",
                             karatOfDiamond: "",
@@ -302,6 +334,7 @@ const ProductForm = () => {
                             isNaturalDiamond: false,
                             isLabDiamond: false,
                             isActive: true,
+                            isLandingPageProduct: false,
                         });
                         setDialogBoxText("Add New Product");
                         setActionButtonText("Create Product");
@@ -373,7 +406,6 @@ const ProductForm = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        {/* Sizes section omitted for brevity */}
                         <Grid size={4}>
                             <TextField variant="filled" label="Karat of Gold" name="karatOfGold" type="number" value={form.karatOfGold} onChange={handleChange} fullWidth />
                         </Grid>
@@ -392,29 +424,58 @@ const ProductForm = () => {
                         <Grid size={4}>
                             <TextField variant="filled" label="Miscellaneous Cost" name="miscellaneousCost" type="number" value={form.miscellaneousCost} onChange={handleChange} fullWidth />
                         </Grid>
-                        <Grid size={8}></Grid>
-                        <Grid size={3}>
+                        <Grid size={4}>
+                            {/* Created at */}
+                            <TextField variant="filled" label="Created At" name="createdAt" type="text" value={form.createdAt || new Date().toLocaleDateString('en-IN', {
+                                year: '2-digit',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true,
+                            })}
+                                disabled fullWidth />
+                        </Grid>
+                        <Grid size={4}>
+                            {/* Updated at */}
+                            <TextField variant="filled" label="Updated At" name="updatedAt" type="text" value={form.updatedAt || new Date().toLocaleDateString('en-IN', {
+                                year: '2-digit',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true,
+                            })}
+                                disabled fullWidth />
+                        </Grid>
+                        <Grid size={2}>
                             <FormControlLabel
                                 control={<Switch checked={form.isCentralisedDiamond} onChange={handleChange} name="isCentralisedDiamond" />}
                                 label="Centralised Diamond Pricing"
                             />
                         </Grid>
-                        <Grid size={3}>
+                        <Grid size={2}>
                             <FormControlLabel
                                 control={<Switch checked={form.isNaturalDiamond} onChange={handleChange} name="isNaturalDiamond" />}
                                 label="Natural Diamond"
                             />
                         </Grid>
-                        <Grid size={3}>
+                        <Grid size={2}>
                             <FormControlLabel
                                 control={<Switch checked={form.isLabDiamond} onChange={handleChange} name="isLabDiamond" />}
                                 label="Lab Diamond"
                             />
                         </Grid>
-                        <Grid size={3}>
+                        <Grid size={2}>
                             <FormControlLabel
                                 control={<Switch checked={form.isActive} onChange={handleChange} name="isActive" />}
                                 label="Active"
+                            />
+                        </Grid>
+                        <Grid size={2}>
+                            <FormControlLabel
+                                control={<Switch checked={form.isLandingPageProduct} onChange={handleChange} name="isLandingPageProduct" />}
+                                label="Landing Page Product"
                             />
                         </Grid>
                         <Divider sx={{ width: "100%", my: 2 }} />
@@ -472,62 +533,37 @@ const ProductForm = () => {
                                     }}
                                 />
                             </Button>
-                            {form.images.map((img, idx) => (
-                                <Box key={idx} display="flex" alignItems="center" mb={1}>
-                                    <TextField
-                                        label={`Image URL #${idx + 1}`}
-                                        value={img}
-                                        onChange={(e) => handleImageChange(idx, e.target.value)}
-                                        fullWidth
-                                        disabled
-                                        sx={{ mr: 1 }}
-                                    />
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        style={{ display: "none" }}
-                                        ref={el => fileInputRefs.current[idx] = el}
-                                        onChange={e => handleFileUpload(idx, e)}
-                                    />
-                                    <IconButton onClick={() => handleRemoveImage(idx)} disabled={form.images.length === 1} style={{ marginRight: 8 }}>
-                                        <RemoveIcon />
-                                    </IconButton>
-                                    <IconButton
-                                        onClick={() => fileInputRefs.current[idx]?.click()}
-                                        style={{ marginRight: 8 }}
-                                    >
-                                        <CloudUploadIcon />
-                                    </IconButton>
-                                    <IconButton onClick={handleAddImage}>
-                                        <AddIcon />
-                                    </IconButton>
-                                </Box>
-                            ))}
                             <Grid container spacing={2} sx={{ mt: 2 }}>
-                            {form.images.map((img, idx) => {
-                                return (
-                                    <Grid item xs={6} sm={4} md={3} key={idx}>
-                                        <Box
-                                            sx={{
-                                                width: "100%",
-                                                height: 150,
-                                                backgroundImage: `url(${img})`,
-                                                backgroundSize: "cover",
-                                                backgroundPosition: "center",
-                                                borderRadius: 1,
-                                                boxShadow: 1,
+                                {form.images.map((img, idx) => {
+                                    return (
+                                        <Grid item xs={6} sm={4} md={3} key={idx} style={{ display: "flex", justifyContent: "center", position: "relative" }}>
+                                            <img src={img} style={{
+                                                width: "300px",
+                                                height: "300px",
+                                                objectFit: "cover",
+                                                borderRadius: 4,
+                                                cursor: "pointer",
+                                            }} />
+                                            <Avatar style={{
+                                                position: "absolute",
+                                                top: 8,
+                                                right: 8,
+                                            }} sx={{
+                                                bgcolor: "error.main",
+                                                cursor: "pointer"
                                             }}
-                                            onClick={() => {
-                                                const newWindow = window.open(img, "_blank");
-                                                if (newWindow) newWindow.focus();
-                                            }}
-                                        />
-                                    </Grid>
-                                );
-                            })}
+                                            onClick={() => handleRemoveImage(idx)}
+                                            >
+                                                <DeleteIcon />
+                                            </Avatar>
+                                        </Grid>
+                                    );
+                                })}
                             </Grid>
                         </Grid>
+
                         <Divider sx={{ width: "100%", my: 2 }} />
+
                         <Grid size={12}>
                             <Typography variant="subtitle1" style={{
                                 marginBottom: "8px",
@@ -574,7 +610,7 @@ const ProductForm = () => {
                 hideFooter
                 disableColumnResize
                 loading={loading}
-                
+
                 sx={{
                     '& .MuiDataGrid-cell': {
                         cursor: 'pointer'
