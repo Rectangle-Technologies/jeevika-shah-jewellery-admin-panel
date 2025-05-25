@@ -453,7 +453,7 @@ const ProductForm = () => {
                                                         },
                                                     }
                                                 );
-                                                const url = res.data?.path || res.data?.body?.path;
+                                                const url = res.data?.filename || res.data?.body?.filename;
                                                 if (url) {
                                                     setForm(prev => ({
                                                         ...prev,
@@ -503,6 +503,29 @@ const ProductForm = () => {
                                     </IconButton>
                                 </Box>
                             ))}
+                            <Grid container spacing={2} sx={{ mt: 2 }}>
+                            {form.images.map((img, idx) => {
+                                return (
+                                    <Grid item xs={6} sm={4} md={3} key={idx}>
+                                        <Box
+                                            sx={{
+                                                width: "100%",
+                                                height: 150,
+                                                backgroundImage: `url(${img})`,
+                                                backgroundSize: "cover",
+                                                backgroundPosition: "center",
+                                                borderRadius: 1,
+                                                boxShadow: 1,
+                                            }}
+                                            onClick={() => {
+                                                const newWindow = window.open(img, "_blank");
+                                                if (newWindow) newWindow.focus();
+                                            }}
+                                        />
+                                    </Grid>
+                                );
+                            })}
+                            </Grid>
                         </Grid>
                         <Divider sx={{ width: "100%", my: 2 }} />
                         <Grid size={12}>
