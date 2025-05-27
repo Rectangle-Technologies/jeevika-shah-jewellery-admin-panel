@@ -7,6 +7,7 @@ import { Box, Button, Grid, Pagination, Typography } from '@mui/material'
 import { backendUrl } from '../constants/url'
 import getAuthHeader from '../constants/authHeader'
 import { enqueueSnackbar } from 'notistack'
+import AddIcon from "@mui/icons-material/Add";
 
 const Orders = () => {
     const columns = [
@@ -71,6 +72,7 @@ const Orders = () => {
                     <Button
                         variant='contained'
                         onClick={() => navigate('/order/create-custom')}
+                        startIcon={<AddIcon />}
                     >Create Custom Order</Button>
                 </Grid>
             </Grid>

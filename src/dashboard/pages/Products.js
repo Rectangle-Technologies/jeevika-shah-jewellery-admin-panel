@@ -20,6 +20,7 @@ import {
     AppBar,
     Toolbar,
     Avatar,
+    InputAdornment,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -31,6 +32,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from '@mui/icons-material/Delete';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const defaultSize = { displayName: "", weightOfMetal: "" };
 
@@ -47,7 +49,7 @@ const ProductForm = () => {
     const [page, setPage] = React.useState(1);
     const rowsPerPage = 20;
     const [dialogBoxText, setDialogBoxText] = useState("Add New Product");
-    const [actionButtonText, setActionButtonText] = useState("Create Product");
+    const [actionButtonText, setActionButtonText] = useState("Add Product");
     const [form, setForm] = useState({
         name: "",
         description: "",
@@ -247,106 +249,87 @@ const ProductForm = () => {
     // File input ref for uploading images
     const fileInputRefs = React.useRef([]);
 
-    // Handle file selection and upload
-    const handleFileUpload = async (idx, event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-        const formData = new FormData();
-        formData.append("file", file);
-        try {
-            const res = await axios.post(
-                `${backendUrl.replace(/\/$/, "")}/utils/upload`,
-                formData,
-                {
-                    headers: {
-                        ...getAuthHeader(),
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-            // Assuming the response contains the URL at res.data.url
-            const url = res.data?.path || res.data?.body?.path;
-            if (url) {
-                handleImageChange(idx, url);
-                enqueueSnackbar("Image uploaded!", { variant: "success" });
-            } else {
-                enqueueSnackbar("Upload succeeded but no URL returned", { variant: "warning" });
-            }
-        } catch (error) {
-            enqueueSnackbar("Image upload failed", { variant: "error" });
-        }
-    };
-
     const columnsProduct = [
         { field: 'id', headerName: 'Product ID', width: 230 },
-        {
-            field: 'name', headerName: 'Name', width: 200, renderCell: (params) => {
-
-                return <Button variant="text" onClick={() => {
-                    setModalOpen(true)
-                    var images = params.row.images || [];
-                    // Decode HTML entities in images
-                    images = images.map(img => {
-                        const txt = document.createElement("textarea");
-                        txt.innerHTML = img;
-                        return txt.value; // Decode HTML entities if any
-                    });
-
-                    setForm({
-                        ...params.row,
-                        images: images,
-                    });
-                    setDialogBoxText("Edit Product");
-                    setActionButtonText("Update Product");
-                }}>{params.value}</Button>;
-            }
-        },
+        { field: 'name', headerName: 'Name', width: 300 },
         { field: 'category', headerName: 'Category', width: 150 },
-        { field: 'description', headerName: 'Description', width: 250 },
         { field: 'isActive', headerName: 'Active', width: 100, type: 'boolean' },
-        { field: 'createdAt', headerName: 'Created On', width: 180 },
+        { field: 'createdAt', headerName: 'Created On', flex: 1, minWidth: 200 },
     ]
 
     return (
         <React.Fragment>
-            <Box sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: 3, border: "1px solid #d0d0d0" }}>
-                <Typography variant="h4" sx={{ mb: 2 }}>
-                    Products
-                </Typography>
-                <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={() => {
-                        setModalOpen(true)
-                        setForm({
-                            name: "",
-                            description: "",
-                            category: categories[0] || "",
-                            images: [],
-                            sizes: [ ...sizes ],
-                            karatOfGold: "",
-                            weightOfGold: "",
-                            karatOfDiamond: "",
-                            costOfDiamond: "",
-                            costOfLabour: "",
-                            miscellaneousCost: "",
-                            isCentralisedDiamond: false,
-                            isNaturalDiamond: false,
-                            isLabDiamond: false,
-                            isActive: true,
-                            isLandingPageProduct: false,
-                        });
-                        setDialogBoxText("Add New Product");
-                        setActionButtonText("Create Product");
-                        fileInputRefs.current = []; // Reset file input refs
-                    }}
-                    sx={{ mb: 2 }}
-                >
-                    Add New Product
-                </Button>
-                <Typography variant="body1" sx={{ mb: 2 }}>
-                    Use the form to add a new product. Ensure all required fields are filled out, and you can upload multiple images for the product.
-                </Typography>
+            <Box sx={{ width: '100%', maxWidth: { sm: '100%' }, mb: 4 }}>
+                <Grid container columns={12} sx={{ mt: 3 }}>
+                    <Grid item size={{ xs: 12, md: 6 }}>
+                        <Typography variant="h2">
+                            All Products
+                        </Typography>
+                    </Grid>
+                    <Grid item size={{ xs: 12, md: 6 }} sx={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 2 }}>
+                        <Button
+                            variant='contained'
+                            onClick={() => {
+                                setModalOpen(true)
+                                setForm({
+                                    name: "",
+                                    description: "",
+                                    category: "",
+                                    images: [],
+                                    sizes: [...sizes],
+                                    karatOfGold: "",
+                                    weightOfGold: "",
+                                    karatOfDiamond: "",
+                                    costOfDiamond: "",
+                                    costOfLabour: "",
+                                    miscellaneousCost: "",
+                                    isCentralisedDiamond: false,
+                                    isNaturalDiamond: false,
+                                    isLabDiamond: false,
+                                    isActive: true,
+                                    isLandingPageProduct: false,
+                                });
+                                setDialogBoxText("Add New Product");
+                                setActionButtonText("Add Product");
+                                fileInputRefs.current = []; // Reset file input refs
+                            }}
+                            startIcon={<AddIcon />}
+                        >Add Product</Button>
+                    </Grid>
+                </Grid>
+                <Grid container sx={{ mt: 4 }}>
+                    <Grid>
+                        <DataGrid
+                            rows={products}
+                            columns={columnsProduct}
+                            hideFooter
+                            disableColumnResize
+                            loading={loading}
+                            sx={{
+                                '& .MuiDataGrid-cell': {
+                                    cursor: 'pointer'
+                                }
+                            }}
+                            onCellClick={(cellData) => {
+                                setModalOpen(true)
+                                var images = cellData.row.images || [];
+                                // Decode HTML entities in images
+                                images = images.map(img => {
+                                    const txt = document.createElement("textarea");
+                                    txt.innerHTML = img;
+                                    return txt.value; // Decode HTML entities if any
+                                });
+
+                                setForm({
+                                    ...cellData.row,
+                                    images: images,
+                                });
+                                setDialogBoxText("Edit Product");
+                                setActionButtonText("Update Product");
+                            }}
+                        />
+                    </Grid>
+                </Grid>
             </Box>
 
             {/* Form to add new product */}
@@ -377,13 +360,23 @@ const ProductForm = () => {
 
                 <Paper sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: 3, border: "1px solid #d0d0d0", minHeight: "80vh", padding: 6, overflowY: "auto" }}>
                     <Grid container spacing={2}>
-                        <Grid size={4}>
+                        {form._id && (
+                            <Grid size={12}>
+                                <TextField
+                                    variant="filled"
+                                    label="Product ID"
+                                    name="_id"
+                                    value={form._id}
+                                    disabled
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                            </Grid>
+                        )}
+                        <Grid size={6}>
                             <TextField label="Name" variant="filled" name="name" value={form.name} onChange={handleChange} fullWidth required />
                         </Grid>
-                        <Grid size={8}>
-                            <TextField label="Description" variant="filled" name="description" value={form.description} onChange={handleChange} fullWidth />
-                        </Grid>
-                        <Grid size={4}>
+                        <Grid size={6}>
                             <FormControl fullWidth variant="filled">
                                 <InputLabel variant="filled" htmlFor="category-native">
                                     Category
@@ -396,8 +389,9 @@ const ProductForm = () => {
                                         id: 'category-native',
                                     }}
                                     required
+                                    IconComponent={KeyboardArrowDownIcon}
                                 >
-                                    <MenuItem value=""> Select Category</MenuItem>
+                                    <MenuItem value="" disabled> Select Category</MenuItem>
                                     {categories.map((cat) => (
                                         <MenuItem key={cat} value={cat}>
                                             {cat}
@@ -406,84 +400,140 @@ const ProductForm = () => {
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid size={4}>
-                            <TextField variant="filled" label="Karat of Gold" name="karatOfGold" type="number" value={form.karatOfGold} onChange={handleChange} fullWidth />
+                        <Grid size={12}>
+                            <TextField
+                                variant="filled"
+                                label="Description" name="description"
+                                value={form.description} onChange={handleChange}
+                                fullWidth required multiline />
                         </Grid>
-                        <Grid size={4}>
-                            <TextField variant="filled" label="Weight of Gold" name="weightOfGold" type="number" value={form.weightOfGold} onChange={handleChange} fullWidth />
+                        <Grid size={6}>
+                            <TextField
+                                variant="filled"
+                                label="Karat of Gold" name="karatOfGold"
+                                value={form.karatOfGold} onChange={handleChange}
+                                fullWidth required
+                                slotProps={{
+                                    input: {
+                                        endAdornment: <InputAdornment position="end">K</InputAdornment>,
+                                    },
+                                }} />
                         </Grid>
-                        <Grid size={4}>
-                            <TextField variant="filled" label="Karat of Diamond" name="karatOfDiamond" type="number" value={form.karatOfDiamond} onChange={handleChange} fullWidth />
-                        </Grid>
-                        <Grid size={4}>
-                            <TextField variant="filled" label="Cost of Diamond" name="costOfDiamond" type="number" value={form.costOfDiamond} onChange={handleChange} fullWidth />
-                        </Grid>
-                        <Grid size={4}>
-                            <TextField variant="filled" label="Cost of Labour" name="costOfLabour" type="number" value={form.costOfLabour} onChange={handleChange} fullWidth />
-                        </Grid>
-                        <Grid size={4}>
-                            <TextField variant="filled" label="Miscellaneous Cost" name="miscellaneousCost" type="number" value={form.miscellaneousCost} onChange={handleChange} fullWidth />
-                        </Grid>
-                        <Grid size={4}>
-                            {/* Created at */}
-                            <TextField variant="filled" label="Created At" name="createdAt" type="text" value={form.createdAt || new Date().toLocaleDateString('en-IN', {
-                                year: '2-digit',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: true,
-                            })}
-                                disabled fullWidth />
-                        </Grid>
-                        <Grid size={4}>
-                            {/* Updated at */}
-                            <TextField variant="filled" label="Updated At" name="updatedAt" type="text" value={form.updatedAt || new Date().toLocaleDateString('en-IN', {
-                                year: '2-digit',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                hour12: true,
-                            })}
-                                disabled fullWidth />
-                        </Grid>
-                        <Grid size={2}>
-                            <FormControlLabel
-                                control={<Switch checked={form.isCentralisedDiamond} onChange={handleChange} name="isCentralisedDiamond" />}
-                                label="Centralised Diamond Pricing"
+                        <Grid size={6}>
+                            <TextField
+                                variant="filled"
+                                label="Weight of Gold"
+                                name="weightOfGold"
+                                value={form.weightOfGold}
+                                onChange={handleChange}
+                                fullWidth
+                                required
+                                slotProps={{
+                                    input: {
+                                        endAdornment: <InputAdornment position="end">gm</InputAdornment>,
+                                    },
+                                }}
                             />
                         </Grid>
-                        <Grid size={2}>
-                            <FormControlLabel
-                                control={<Switch checked={form.isNaturalDiamond} onChange={handleChange} name="isNaturalDiamond" />}
-                                label="Natural Diamond"
+                        <Grid size={6}>
+                            <TextField
+                                variant="filled"
+                                label="Karat of Diamond" name="karatOfDiamond"
+                                value={form.karatOfDiamond} onChange={handleChange}
+                                fullWidth required
+                                slotProps={{
+                                    input: {
+                                        endAdornment: <InputAdornment position="end">K</InputAdornment>,
+                                    },
+                                }}
                             />
                         </Grid>
-                        <Grid size={2}>
-                            <FormControlLabel
-                                control={<Switch checked={form.isLabDiamond} onChange={handleChange} name="isLabDiamond" />}
-                                label="Lab Diamond"
+                        <Grid size={6}>
+                            <TextField
+                                variant="filled"
+                                label="Cost of Diamond" name="costOfDiamond"
+                                value={form.costOfDiamond} onChange={handleChange}
+                                fullWidth required disabled={form.isCentralisedDiamond}
+                                slotProps={{
+                                    input: {
+                                        startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                                    },
+                                }}
                             />
                         </Grid>
-                        <Grid size={2}>
-                            <FormControlLabel
-                                control={<Switch checked={form.isActive} onChange={handleChange} name="isActive" />}
-                                label="Active"
+                        <Grid size={6}>
+                            <TextField
+                                variant="filled"
+                                label="Cost of Labour" name="costOfLabour"
+                                value={form.costOfLabour} onChange={handleChange}
+                                fullWidth required
+                                slotProps={{
+                                    input: {
+                                        startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                                    },
+                                }}
                             />
                         </Grid>
-                        <Grid size={2}>
-                            <FormControlLabel
-                                control={<Switch checked={form.isLandingPageProduct} onChange={handleChange} name="isLandingPageProduct" />}
-                                label="Landing Page Product"
+                        <Grid size={6}>
+                            <TextField
+                                variant="filled"
+                                label="Miscellaneous Cost" name="miscellaneousCost"
+                                value={form.miscellaneousCost} onChange={handleChange}
+                                fullWidth required
+                                slotProps={{
+                                    input: {
+                                        startAdornment: <InputAdornment position="start">₹</InputAdornment>,
+                                    },
+                                }}
                             />
+                        </Grid>
+                        {form.createdAt && form.updatedAt && (<>
+                            <Grid size={4}>
+                                {/* Created at */}
+                                <TextField variant="filled" label="Created On" name="createdAt" type="text" value={form.createdAt}
+                                    disabled fullWidth />
+                            </Grid>
+                            <Grid size={4}>
+                                {/* Updated at */}
+                                <TextField variant="filled" label="Last Updated On" name="updatedAt" type="text" value={form.updatedAt}
+                                    disabled fullWidth />
+                            </Grid>
+                        </>
+                        )}
+                        <Grid container size={12}>
+                            <Grid size={3}>
+                                <FormControlLabel
+                                    control={<Switch checked={form.isCentralisedDiamond} onChange={handleChange} name="isCentralisedDiamond" />}
+                                    label="Centralised Diamond Pricing"
+                                />
+                            </Grid>
+                            <Grid size={2.4}>
+                                <FormControlLabel
+                                    control={<Switch checked={form.isNaturalDiamond} onChange={handleChange} name="isNaturalDiamond" />}
+                                    label="Natural Diamond"
+                                />
+                            </Grid>
+                            <Grid size={2.4}>
+                                <FormControlLabel
+                                    control={<Switch checked={form.isLabDiamond} onChange={handleChange} name="isLabDiamond" />}
+                                    label="Lab Diamond"
+                                />
+                            </Grid>
+                            <Grid size={1.8}>
+                                <FormControlLabel
+                                    control={<Switch checked={form.isActive} onChange={handleChange} name="isActive" />}
+                                    label="Active"
+                                />
+                            </Grid>
+                            <Grid size={2.4}>
+                                <FormControlLabel
+                                    control={<Switch checked={form.isLandingPageProduct} onChange={handleChange} name="isLandingPageProduct" />}
+                                    label="Landing Page Product"
+                                />
+                            </Grid>
                         </Grid>
                         <Divider sx={{ width: "100%", my: 2 }} />
                         <Grid size={12}>
-                            <Typography variant="subtitle1" style={{
-                                marginBottom: "8px",
-                            }}>Add Images</Typography>
-
                             {/* Multi-file upload button */}
                             <Button
                                 variant="contained"
@@ -491,7 +541,7 @@ const ProductForm = () => {
                                 startIcon={<CloudUploadIcon />}
                                 sx={{ mb: 2 }}
                             >
-                                Upload Multiple Images
+                                Upload Images
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -552,7 +602,7 @@ const ProductForm = () => {
                                                 bgcolor: "error.main",
                                                 cursor: "pointer"
                                             }}
-                                            onClick={() => handleRemoveImage(idx)}
+                                                onClick={() => handleRemoveImage(idx)}
                                             >
                                                 <DeleteIcon />
                                             </Avatar>
@@ -578,7 +628,7 @@ const ProductForm = () => {
                                         sx={{ mr: 1 }}
                                     />
                                     <TextField
-                                        label={`Weight of Metal #${idx + 1}`}
+                                        label={`Weight Difference #${idx + 1}`}
                                         type="number"
                                         value={size.weightOfMetal}
                                         onChange={(e) => handleSizeChange(idx, "weightOfMetal", e.target.value)}
@@ -602,21 +652,6 @@ const ProductForm = () => {
                     </Grid>
                 </Paper>
             </Dialog>
-
-            {/* Display existing products */}
-            <DataGrid
-                rows={products}
-                columns={columnsProduct}
-                hideFooter
-                disableColumnResize
-                loading={loading}
-
-                sx={{
-                    '& .MuiDataGrid-cell': {
-                        cursor: 'pointer'
-                    }
-                }}
-            />
         </React.Fragment>
     );
 };
