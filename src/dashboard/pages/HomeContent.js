@@ -129,9 +129,46 @@ const HomeContent = () => {
 		},
 		{
 			field: 'value',
-			headerName: 'VALUE',
+			headerName: 'Image',
 			flex: 1,
-			minWidth: 150
+			minWidth: 150,
+			renderCell: (params) => {
+				const [isModalOpen, setIsModalOpen] = useState(false);
+				return (
+					<React.Fragment>
+						{!isModalOpen && (
+							<Button
+								variant="outlined"
+								onClick={() => {
+									setIsModalOpen(true);
+								}}
+								sx={{ textTransform: 'none' }}
+							>
+								View Image
+							</Button>
+						)}
+						{isModalOpen && (
+							<Dialog
+								open={isModalOpen}
+								onClose={() => setIsModalOpen(false)}
+								fullWidth
+								maxWidth="md"
+							>
+								<img src={params.value} alt={params.row.key} style={{ width: '100%', height: 'auto' }} />
+								<Button
+									variant="contained"
+									color="primary"
+									onClick={() => setIsModalOpen(false)}
+									style={{ margin: '16px' }}
+								>
+									Close
+								</Button>
+							</Dialog>
+
+						)}
+					</React.Fragment>
+				)
+			}
 		}
 	]
 
@@ -207,8 +244,8 @@ const HomeContent = () => {
 								>
 									<MenuItem value=""> Select Category</MenuItem>
 									{categories.map((cat) => (
-										<MenuItem key={cat} value={cat}>
-											{cat}
+										<MenuItem key={cat.Key} value={cat}>
+											{cat.Value}
 										</MenuItem>
 									))}
 								</Select>
