@@ -123,13 +123,12 @@ const HomeContent = () => {
 		},
 		{
 			field: 'key',
-			headerName: 'KEY',
-			flex: 1,
-			minWidth: 90
+			headerName: 'Key',
+			width: 150
 		},
 		{
 			field: 'value',
-			headerName: 'VALUE',
+			headerName: 'Value',
 			flex: 1,
 			minWidth: 150
 		}
@@ -140,40 +139,42 @@ const HomeContent = () => {
 	return (
 		<React.Fragment>
 			<Box sx={{ width: '100%', maxWidth: { sm: '100%' }, mb: 4 }}>
-				<Grid item size={{ xs: 12, md: 6 }}>
-					<Typography variant="h2">
-						Home Content
-					</Typography>
-				</Grid>
-				<Grid item size={{ xs: 12, md: 6 }} sx={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 2 }}>
-					<Button
-						variant='contained'
-						onClick={() => {
-							setModalOpen(true)
-							setForm({
-								key: '',
-								value: ''
-							});
-							setDialogBoxText("Add New Image");
-							setActionButtonText("Save Content");
-							fileInputRefs.current = []; // Reset file input refs
-						}}
-						startIcon={<AddIcon />}
-					>Configure Home Content</Button>
-				</Grid>
-				<Grid size={12} sx={{ mt: 4 }}>
-					<DataGrid
-						rows={homeContent}
-						columns={columnsHomeContent}
-						hideFooter
-						disableColumnResize
-						loading={loading}
-						sx={{
-							'& .MuiDataGrid-cell': {
-								cursor: 'pointer'
-							}
-						}}
-					/>
+				<Grid container spacing={2} sx={{ mt: 3 }}>
+					<Grid item size={{ xs: 12, md: 6 }}>
+						<Typography variant="h2">
+							Home Content
+						</Typography>
+					</Grid>
+					<Grid item size={{ xs: 12, md: 6 }} sx={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 2 }}>
+						<Button
+							variant='contained'
+							onClick={() => {
+								setModalOpen(true)
+								setForm({
+									key: '',
+									value: ''
+								});
+								setDialogBoxText("Add New Image");
+								setActionButtonText("Save Content");
+								fileInputRefs.current = []; // Reset file input refs
+							}}
+							startIcon={<AddIcon />}
+						>Configure Home Content</Button>
+					</Grid>
+					<Grid size={12} sx={{ mt: 4 }}>
+						<DataGrid
+							rows={homeContent}
+							columns={columnsHomeContent}
+							hideFooter
+							disableColumnResize
+							loading={loading}
+							sx={{
+								'& .MuiDataGrid-cell': {
+									cursor: 'pointer'
+								}
+							}}
+						/>
+					</Grid>
 				</Grid>
 			</Box>
 			<Dialog
