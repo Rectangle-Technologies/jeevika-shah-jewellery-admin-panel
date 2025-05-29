@@ -29,7 +29,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'; import { enqueueSnackbar } from "notistack";
 import getAuthHeader from "../constants/authHeader";
 import { DataGrid } from "@mui/x-data-grid";
-
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
@@ -119,21 +119,21 @@ const HomeContent = () => {
 		{
 			field: 'id',
 			headerName: 'ID',
-			width: 90
+			width: 0
 		},
 		{
 			field: 'key',
-			headerName: 'Key',
-			width: 150,
+			headerName: 'Element',
+			width: 350,
 			renderCell: (params) => {
 				const [category, setCategory] = useState(null);
 				React.useEffect(() => {
-					const foundCategory = categories.find(cat => cat.Key === params.row.key);
+					const foundCategory = categories.find(cat => cat.key === params.row.key);
 					if (foundCategory) {
 						setCategory(foundCategory);
 					}
 				}, [categories, params.row.key]);
-				return (<>{category?.Value}</>);
+				return (<>{category?.displayName}</>);
 			}
 		},
 		{
@@ -203,7 +203,6 @@ const HomeContent = () => {
 								setActionButtonText("Save Content");
 								fileInputRefs.current = []; // Reset file input refs
 							}}
-							startIcon={<AddIcon />}
 						>Configure Home Content</Button>
 					</Grid>
 					<Grid size={12} sx={{ mt: 4 }}>
@@ -217,6 +216,9 @@ const HomeContent = () => {
 								'& .MuiDataGrid-cell': {
 									cursor: 'pointer'
 								}
+							}}
+							columnVisibilityModel={{
+								id: false, // Hide the ID column
 							}}
 						/>
 					</Grid>
@@ -262,17 +264,18 @@ const HomeContent = () => {
 										id: 'category-native',
 									}}
 									required
+									IconComponent={KeyboardArrowDownIcon}
 								>
-									<MenuItem value=""> Select Category</MenuItem>
+									<MenuItem value="" disabled> Select Category</MenuItem>
 									{categories.map((cat) => (
-										<MenuItem key={cat.Key} value={cat}>
-											{cat.Value}
+										<MenuItem key={cat.key} value={cat}>
+											{cat.displayName}
 										</MenuItem>
 									))}
 								</Select>
 							</FormControl>
 						</Grid>
-						<Grid size={8}>
+						<Grid size={8} sx={{ mt: 1 }}>
 							<Button
 								variant="contained"
 								component="label"
