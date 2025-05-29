@@ -75,6 +75,8 @@ const Login = () => {
                         sx={{ width: '300px', mb: 2 }}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        name="email"
+                        type="email"
                     />
                 </Grid>
                 <Grid item size={12}>

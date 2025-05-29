@@ -6,6 +6,7 @@ import { backendUrl } from '../constants/url'
 import getAuthHeader from '../constants/authHeader'
 import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios'
+import { formatText } from '../helpers/formatText'
 
 const Users = () => {
     const columns = [
@@ -31,7 +32,7 @@ const Users = () => {
                 id: user._id,
                 name: user.name,
                 contact: user.phone,
-                address: [
+                address: formatText([
                     user.address.line1,
                     user.address.line2, // will be empty if not present
                     user.address.city,
@@ -39,7 +40,7 @@ const Users = () => {
                     user.address.country + ' - ' + user.address.zip
                 ]
                     .filter(part => part && part.trim() !== '') // remove empty parts
-                    .join(', '),
+                    .join(', ')),
             })))
             setTotalPages(Math.ceil(response.data.body.totalUsers / rowsPerPage))
         } catch (error) {
@@ -69,7 +70,7 @@ const Users = () => {
                 id: response.data.body._id,
                 name: response.data.body.name,
                 contact: response.data.body.phone,
-                address: [
+                address: formatText([
                     response.data.body.address.line1,
                     response.data.body.address.line2, // will be empty if not present
                     response.data.body.address.city,
@@ -77,7 +78,7 @@ const Users = () => {
                     response.data.body.address.country + ' - ' + response.data.body.address.zip
                 ]
                     .filter(part => part && part.trim() !== '') // remove empty parts
-                    .join(', '),
+                    .join(', ')),
             }])
             setPhone('')
         } catch (error) {

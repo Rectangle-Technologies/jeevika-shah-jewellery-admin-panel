@@ -12,6 +12,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { enqueueSnackbar } from 'notistack'
 import formatAmount from "../helpers/formatAmount"
 import { formatDiamondType } from '../helpers/formatDiamondType'
+import { formatText } from '../helpers/formatText'
 
 const OrderDetail = () => {
     const [order, setOrder] = React.useState()
@@ -148,7 +149,7 @@ const OrderDetail = () => {
                                             Contact: {order.receiverDetails.phone}
                                         </Typography>
                                         <Typography sx={{ fontSize: 16 }}>
-                                            Address: {
+                                            Address: {formatText(
                                                 [
                                                     order.receiverDetails.address.line1,
                                                     order.receiverDetails.address.line2, // will be empty if not present
@@ -157,7 +158,7 @@ const OrderDetail = () => {
                                                     order.receiverDetails.address.country + ' - ' + order.receiverDetails.address.zip
                                                 ]
                                                     .filter(part => part && part.trim() !== '') // remove empty parts
-                                                    .join(', ')
+                                                    .join(', '))
                                             }
                                         </Typography>
                                     </CardContent>
@@ -189,7 +190,7 @@ const OrderDetail = () => {
                                                         </Typography>
                                                     </Grid>
                                                     <Grid item size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
-                                                        <img src={product.productId.images[0]} alt={product.productId.name} style={{ height: '200px', width: 'auto' }} />
+                                                        <img src={formatText(product.productId.images[0])} alt={product.productId.name} style={{ height: '200px', width: 'auto' }} />
                                                     </Grid>
                                                 </Grid>
                                             </Paper>

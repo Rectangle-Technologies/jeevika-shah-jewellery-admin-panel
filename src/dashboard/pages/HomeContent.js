@@ -47,13 +47,13 @@ const HomeContent = () => {
 		value: ''
 	});
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setForm((prev) => ({
-            ...prev,
-            [name]: type === "checkbox" ? checked : value,
-        }));
-    };
+	const handleChange = (e) => {
+		const { name, value, type, checked } = e.target;
+		setForm((prev) => ({
+			...prev,
+			[name]: type === "checkbox" ? checked : value,
+		}));
+	};
 
 	const handleCloseModal = () => {
 		setModalOpen(false);
@@ -74,13 +74,13 @@ const HomeContent = () => {
 				}
 			}
 		)
-		.then(() => {
-			enqueueSnackbar("Home content saved successfully!", { variant: "success" });
-		})
-		.catch((error) => {
-			enqueueSnackbar("Failed to save home content", { variant: "error" });
-			console.error(error);
-		});
+			.then(() => {
+				enqueueSnackbar("Home content saved successfully!", { variant: "success" });
+			})
+			.catch((error) => {
+				enqueueSnackbar("Failed to save home content", { variant: "error" });
+				console.error(error);
+			});
 		setModalOpen(false);
 	};
 
@@ -123,9 +123,8 @@ const HomeContent = () => {
 		},
 		{
 			field: 'key',
-			headerName: 'KEY',
-			flex: 1,
-			minWidth: 150
+			headerName: 'Key',
+			width: 150
 		},
 		{
 			field: 'value',
@@ -176,30 +175,44 @@ const HomeContent = () => {
 
 	return (
 		<React.Fragment>
-			<Box sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: 3, border: "1px solid #d0d0d0" }}>
-				<Typography variant="h4" sx={{ mb: 2 }}>
-					Home Content Image
-				</Typography>
-				<Button
-					variant="contained"
-					startIcon={<AddIcon />}
-					onClick={() => {
-						setModalOpen(true)
-						setForm({
-							key: '',
-							value: ''
-						});
-						setDialogBoxText("Add New Image");
-						setActionButtonText("Save Content");
-						fileInputRefs.current = []; // Reset file input refs
-					}}
-					sx={{ mb: 2 }}
-				>
-					Configure Home Content
-				</Button>
-				<Typography variant="body1" sx={{ mb: 2 }}>
-					This section allows you to configure the content displayed on the home page of your application. You can add, edit, or remove content as needed.
-				</Typography>
+			<Box sx={{ width: '100%', maxWidth: { sm: '100%' }, mb: 4 }}>
+				<Grid container spacing={2} sx={{ mt: 3 }}>
+					<Grid item size={{ xs: 12, md: 6 }}>
+						<Typography variant="h2">
+							Home Content
+						</Typography>
+					</Grid>
+					<Grid item size={{ xs: 12, md: 6 }} sx={{ display: 'flex', justifyContent: 'flex-end', paddingRight: 2 }}>
+						<Button
+							variant='contained'
+							onClick={() => {
+								setModalOpen(true)
+								setForm({
+									key: '',
+									value: ''
+								});
+								setDialogBoxText("Add New Image");
+								setActionButtonText("Save Content");
+								fileInputRefs.current = []; // Reset file input refs
+							}}
+							startIcon={<AddIcon />}
+						>Configure Home Content</Button>
+					</Grid>
+					<Grid size={12} sx={{ mt: 4 }}>
+						<DataGrid
+							rows={homeContent}
+							columns={columnsHomeContent}
+							hideFooter
+							disableColumnResize
+							loading={loading}
+							sx={{
+								'& .MuiDataGrid-cell': {
+									cursor: 'pointer'
+								}
+							}}
+						/>
+					</Grid>
+				</Grid>
 			</Box>
 			<Dialog
 				fullScreen
@@ -318,19 +331,6 @@ const HomeContent = () => {
 					</Grid>
 				</Paper>
 			</Dialog>
-			<DataGrid
-							rows={homeContent}
-							columns={columnsHomeContent}
-							hideFooter
-							disableColumnResize
-							loading={loading}
-			
-							sx={{
-								'& .MuiDataGrid-cell': {
-									cursor: 'pointer'
-								}
-							}}
-						/>
 		</React.Fragment>
 	)
 }

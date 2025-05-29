@@ -8,6 +8,7 @@ import { enqueueSnackbar } from 'notistack'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import formatAmount from '../helpers/formatAmount'
 import { DataGrid } from '@mui/x-data-grid'
+import { formatText } from '../helpers/formatText'
 
 const UserDetails = () => {
     const [user, setUser] = React.useState(null)
@@ -85,6 +86,7 @@ const UserDetails = () => {
                                             </Typography>}
                                             <Typography sx={{ fontSize: 16 }}>
                                                 Address: {
+                                                    formatText(
                                                     [
                                                         user.address.line1,
                                                         user.address.line2, // will be empty if not present
@@ -93,7 +95,7 @@ const UserDetails = () => {
                                                         user.address.country + ' - ' + user.address.zip
                                                     ]
                                                         .filter(part => part && part.trim() !== '') // remove empty parts
-                                                        .join(', ')
+                                                        .join(', '))
                                                 }
                                             </Typography>
                                             <Typography sx={{ fontSize: 16 }}>
