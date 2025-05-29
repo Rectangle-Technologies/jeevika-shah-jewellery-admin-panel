@@ -124,7 +124,17 @@ const HomeContent = () => {
 		{
 			field: 'key',
 			headerName: 'Key',
-			width: 150
+			width: 150,
+			renderCell: (params) => {
+				const [category, setCategory] = useState(null);
+				React.useEffect(() => {
+					const foundCategory = categories.find(cat => cat.Key === params.row.key);
+					if (foundCategory) {
+						setCategory(foundCategory);
+					}
+				}, [categories, params.row.key]);
+				return (<>{category?.Value}</>);
+			}
 		},
 		{
 			field: 'value',
@@ -170,8 +180,6 @@ const HomeContent = () => {
 			}
 		}
 	]
-
-	console.log(form)
 
 	return (
 		<React.Fragment>
