@@ -66,10 +66,12 @@ const Home = () => {
             })
         } catch (error) {
             console.error('Error fetching orders:', error)
-            enqueueSnackbar("Error fetching orders", {
-                autoHideDuration: 2000,
-                variant: "error",
-            });
+            if (error?.response?.data?.reasonCode !== 'UNAUTHORIZED') {
+                enqueueSnackbar(error?.response?.data?.message || "Error fetching orders", {
+                    autoHideDuration: 2000,
+                    variant: "error",
+                });
+            }
         } finally {
             setIsLoading(false)
         }
