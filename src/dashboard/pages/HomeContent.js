@@ -64,7 +64,7 @@ const HomeContent = () => {
 		axios.post(
 			`${backendUrl}/home-content/add`,
 			{
-				key: form.key,
+				key: form.key.key,
 				value: form.value,
 			},
 			{
