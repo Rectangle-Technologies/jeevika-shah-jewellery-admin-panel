@@ -8,6 +8,8 @@ import { backendUrl } from '../constants/url'
 import formatAmount from '../helpers/formatAmount'
 import EditProductModal from '../components/EditProductModal'
 import { formatDiamondType } from '../helpers/formatDiamondType'
+import { useNavigate } from 'react-router-dom'
+import { formatText } from '../helpers/formatText'
 
 const NewCustomOrder = () => {
     const [phone, setPhone] = React.useState('')
@@ -20,6 +22,7 @@ const NewCustomOrder = () => {
     const [editProductModalOpen, setEditProductModalOpen] = React.useState(false)
     const [editProductIndex, setEditProductIndex] = React.useState(-1)
     const MobileNumberRegex = /^[6-9][0-9]{9}$/
+    const navigate = useNavigate()
 
     const handleAddModalOpen = () => setAddProductModalOpen(true);
     const handleAddModalClose = () => setAddProductModalOpen(false);
@@ -73,7 +76,7 @@ const NewCustomOrder = () => {
                 },
                 products
             }
-            await axios.post(`${backendUrl}/order/create-custom`, orderData, { headers: getAuthHeader() })
+            const response = await axios.post(`${backendUrl}/order/create-custom`, orderData, { headers: getAuthHeader() })
 
             setCustomOrderDescription('')
             setProducts([])
@@ -82,6 +85,7 @@ const NewCustomOrder = () => {
                 autoHideDuration: 2000,
                 variant: "success",
             });
+            navigate(`/order/${response.data.body._id}`)
         } catch (error) {
             console.error('Error creating order:', error)
             enqueueSnackbar(error?.response?.data?.message || "Error creating order", {
@@ -172,7 +176,7 @@ const NewCustomOrder = () => {
                                         </Typography>
                                     </Grid>
                                     <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
-                                        <img src={product.image} alt={product.name} style={{ height: '200px', width: 'auto' }} />
+                                        <img src={formatText(product.image)} alt={product.name} style={{ height: '200px', width: 'auto' }} />
                                     </Grid>
                                 </Grid>
                                 <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>

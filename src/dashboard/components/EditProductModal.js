@@ -4,6 +4,7 @@ import { enqueueSnackbar } from 'notistack';
 import React from 'react'
 import { backendUrl } from '../constants/url';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { formatText } from '../helpers/formatText';
 
 const EditProductModal = (props) => {
     const [product, setProduct] = React.useState(null)
@@ -181,7 +182,7 @@ const EditProductModal = (props) => {
                                     </Select>
                                 </Grid>
                                 <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
-                                    <img src={product.images[0]} alt={product.name} style={{ height: '180px', width: 'auto' }} />
+                                    <img src={formatText(product.images[0])} alt={product.name} style={{ height: '180px', width: 'auto' }} />
                                 </Grid>
                             </Grid>
                         </Paper>
