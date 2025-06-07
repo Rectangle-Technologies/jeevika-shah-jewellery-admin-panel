@@ -320,7 +320,7 @@ const HomeContent = () => {
 												}
 											} catch (error) {
 												console.error("Image upload failed:", error);
-												enqueueSnackbar(`Image upload failed for "${file.name}"`, { variant: "error" });
+												enqueueSnackbar(`Image upload failed for "${file.name}". Please check file format.`, { variant: "error" });
 											}
 										}
 										// Reset the input value so the same files can be selected again if needed
