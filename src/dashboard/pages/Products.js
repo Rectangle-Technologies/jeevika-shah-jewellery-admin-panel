@@ -33,6 +33,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { calculatePricing } from "js-product-pricing-calculator";
 
 const defaultSize = { displayName: "", weightOfMetal: "" };
 
@@ -255,6 +256,13 @@ const ProductForm = () => {
         { field: 'category', headerName: 'Category', width: 150 },
         { field: 'isActive', headerName: 'Active', width: 100, type: 'boolean' },
         { field: 'createdAt', headerName: 'Created On', flex: 1, minWidth: 200 },
+        { field: 'calculatedPrice', headerName: 'Price Starts From', width: 150, type: 'number', valueGetter: (params) => {
+            var value = params;
+            if (typeof params === 'number') {
+                value = params.toFixed(2);
+            }
+            return "₹" + value;
+        }}
     ]
 
     return (

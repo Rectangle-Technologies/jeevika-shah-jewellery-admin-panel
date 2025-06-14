@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import { backendUrl } from "../constants/url";
+import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import {
 	Box,
 	Typography,
@@ -38,10 +41,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const HomeContent = () => {
 	const [categories, setCategories] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [loader, setLoader] = useState(false);
 	const [modalOpen, setModalOpen] = useState(false);
 	const [dialogBoxText, setDialogBoxText] = useState("Add New Product");
 	const [actionButtonText, setActionButtonText] = useState("Create Product");
 	const [homeContent, setHomeContent] = useState([]);
+	const [refresh, setRefresh] = useState(true);
 	const [form, setForm] = useState({
 		key: '',
 		value: ''
@@ -82,17 +87,21 @@ const HomeContent = () => {
 				console.error(error);
 			});
 		setModalOpen(false);
+		setRefresh(true);
 	};
 
 	const fileInputRefs = React.useRef([]);
 
 	React.useEffect(() => {
+		if (!refresh) return; // Only fetch categories if refresh is true
+		
 		const fetchCategories = async () => {
 			try {
 				const res = await axios.get(`${backendUrl}/home-content/category`, {
 					headers: getAuthHeader(),
 				});
 				setCategories(res.data?.body?.categories || []);
+				console.log("Fetched categories:", res.data?.body?.categories);
 				setLoading(false);
 
 				// Get all content for the home page
@@ -108,12 +117,13 @@ const HomeContent = () => {
 				} else {
 					enqueueSnackbar("No content found for home page", { variant: "info" });
 				}
+				setRefresh(false);
 			} catch (error) {
 				enqueueSnackbar("Failed to load categories", { variant: "error" });
 			}
 		};
 		fetchCategories();
-	}, []);
+	}, [refresh]);
 
 	const columnsHomeContent = [
 		{
@@ -163,7 +173,7 @@ const HomeContent = () => {
 								fullWidth
 								maxWidth="md"
 							>
-								<img src={params.value} alt={params.row.key} style={{ width: '100%', height: 'auto' }} />
+								<img src={params.value} alt={params.row.key} style={{ width: '100%', maxHeight: '80vh' }} />
 								<Button
 									variant="contained"
 									color="primary"
@@ -181,8 +191,11 @@ const HomeContent = () => {
 		}
 	]
 
+	console.log("Refresh state:", refresh);
+
 	return (
 		<React.Fragment>
+			
 			<Box sx={{ width: '100%', maxWidth: { sm: '100%' }, mb: 4 }}>
 				<Grid container spacing={2} sx={{ mt: 3 }}>
 					<Grid item size={{ xs: 12, md: 6 }}>
@@ -204,6 +217,17 @@ const HomeContent = () => {
 								fileInputRefs.current = []; // Reset file input refs
 							}}
 						>Configure Home Content</Button>
+						<Button
+							variant='outlined'
+							onClick={() => {
+								setRefresh(true);
+								setLoading(true);
+								enqueueSnackbar("Refreshing content...", { variant: "info" });
+							}}
+							sx={{ ml: 2 }}
+						>
+							<RefreshIcon />
+						</Button>
 					</Grid>
 					<Grid size={12} sx={{ mt: 4 }}>
 						<DataGrid
@@ -276,6 +300,12 @@ const HomeContent = () => {
 							</FormControl>
 						</Grid>
 						<Grid size={8} sx={{ mt: 1 }}>
+							<Backdrop
+								sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+								open={loader}
+							>
+								<CircularProgress color="inherit" />
+							</Backdrop>
 							<Button
 								variant="contained"
 								component="label"
@@ -291,6 +321,7 @@ const HomeContent = () => {
 									onChange={async (e) => {
 										const files = Array.from(e.target.files);
 										console.log("Selected files:", files);
+										setLoader(true);
 										if (!files.length) return;
 										for (const file of files) {
 											const formData = new FormData();
@@ -322,6 +353,7 @@ const HomeContent = () => {
 												console.error("Image upload failed:", error);
 												enqueueSnackbar(`Image upload failed for "${file.name}". Please check file format.`, { variant: "error" });
 											}
+											setLoader(false);
 										}
 										// Reset the input value so the same files can be selected again if needed
 										e.target.value = "";
