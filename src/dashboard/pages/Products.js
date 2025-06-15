@@ -57,12 +57,12 @@ const ProductForm = () => {
         category: "",
         images: [],
         sizes: [{ ...defaultSize }],
-        karatOfGold: "",
-        weightOfGold: "",
-        karatOfDiamond: "",
-        costOfDiamond: "",
-        costOfLabour: "",
-        miscellaneousCost: "",
+        karatOfGold: "18",
+        weightOfGold: "0",
+        costOfNaturalDiamond: "0",
+        costOfLabDiamond: "0",
+        costOfLabour: "0",
+        miscellaneousCost: "0",
         isCentralisedDiamond: false,
         isNaturalDiamond: false,
         isLabDiamond: false,
@@ -120,7 +120,8 @@ const ProductForm = () => {
                 ...form,
                 karatOfGold: Number(form.karatOfGold),
                 weightOfGold: Number(form.weightOfGold),
-                karatOfDiamond: Number(form.karatOfDiamond),
+                costOfNaturalDiamond: Number(form.costOfNaturalDiamond),
+                costOfLabDiamond: Number(form.costOfLabDiamond),
                 costOfDiamond: Number(form.costOfDiamond),
                 costOfLabour: Number(form.costOfLabour),
                 miscellaneousCost: Number(form.miscellaneousCost),
@@ -158,12 +159,12 @@ const ProductForm = () => {
                 category: "",
                 images: [],
                 sizes: [{ ...defaultSize }],
-                karatOfGold: "",
-                weightOfGold: "",
-                karatOfDiamond: "",
-                costOfDiamond: "",
-                costOfLabour: "",
-                miscellaneousCost: "",
+                karatOfGold: "18",
+                weightOfGold: "0",
+                costOfNaturalDiamond: "0",
+                costOfLabDiamond: "0",
+                costOfLabour: "0",
+                miscellaneousCost: "0",
                 isCentralisedDiamond: false,
                 isNaturalDiamond: false,
                 isLabDiamond: false,
@@ -285,12 +286,12 @@ const ProductForm = () => {
                                     category: "",
                                     images: [],
                                     sizes: [...sizes],
-                                    karatOfGold: "",
-                                    weightOfGold: "",
-                                    karatOfDiamond: "",
-                                    costOfDiamond: "",
-                                    costOfLabour: "",
-                                    miscellaneousCost: "",
+                                    karatOfGold: "18",
+                                    weightOfGold: "0",
+                                    costOfNaturalDiamond: "0",
+                                    costOfLabDiamond: "0",
+                                    costOfLabour: "0",
+                                    miscellaneousCost: "0",
                                     isCentralisedDiamond: false,
                                     isNaturalDiamond: false,
                                     isLabDiamond: false,
@@ -446,12 +447,12 @@ const ProductForm = () => {
                         <Grid size={6}>
                             <TextField
                                 variant="filled"
-                                label="Karat of Diamond" name="karatOfDiamond"
-                                value={form.karatOfDiamond} onChange={handleChange}
-                                fullWidth required
+                                label="Cost of Natural Diamond" name="costOfNaturalDiamond"
+                                value={form.costOfNaturalDiamond} onChange={handleChange}
+                                fullWidth required disabled={form.isCentralisedDiamond}
                                 slotProps={{
                                     input: {
-                                        endAdornment: <InputAdornment position="end">K</InputAdornment>,
+                                        startAdornment: <InputAdornment position="start">₹</InputAdornment>,
                                     },
                                 }}
                             />
@@ -459,8 +460,8 @@ const ProductForm = () => {
                         <Grid size={6}>
                             <TextField
                                 variant="filled"
-                                label="Cost of Diamond" name="costOfDiamond"
-                                value={form.costOfDiamond} onChange={handleChange}
+                                label="Cost of Lab Diamond" name="costOfLabDiamond"
+                                value={form.costOfLabDiamond} onChange={handleChange}
                                 fullWidth required disabled={form.isCentralisedDiamond}
                                 slotProps={{
                                     input: {
