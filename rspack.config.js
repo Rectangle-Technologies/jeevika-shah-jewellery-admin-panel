@@ -37,7 +37,7 @@ export default defineConfig({
     // You need to set a unique value that is not equal to other applications
     uniqueName: "admin_panel",
     // publicPath must be configured if using manifest
-    publicPath: "http://localhost:4545/",
+    publicPath: "http://ec2-13-203-226-186.ap-south-1.compute.amazonaws.com:4545/",
   },
 
   experiments: {
