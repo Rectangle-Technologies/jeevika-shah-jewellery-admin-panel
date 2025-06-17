@@ -86,7 +86,7 @@ export default defineConfig({
       template: "./index.html",
     }),
     new ModuleFederationPlugin(mfConfig),
-    isDev ? new RefreshPlugin() : null,
+    null,
   ].filter(Boolean),
   optimization: {
     minimizer: [
