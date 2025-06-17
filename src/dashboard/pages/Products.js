@@ -34,6 +34,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { calculatePricing } from "js-product-pricing-calculator";
+import formatAmount from "../helpers/formatAmount";
 
 const defaultSize = { displayName: "", weightOfMetal: "" };
 
@@ -64,8 +65,8 @@ const ProductForm = () => {
         costOfLabour: "0",
         miscellaneousCost: "0",
         isCentralisedDiamond: false,
-        isNaturalDiamond: false,
-        isLabDiamond: false,
+        isNaturalDiamond: true,
+        isLabDiamond: true,
         isActive: true,
     });
 
@@ -166,8 +167,8 @@ const ProductForm = () => {
                 costOfLabour: "0",
                 miscellaneousCost: "0",
                 isCentralisedDiamond: false,
-                isNaturalDiamond: false,
-                isLabDiamond: false,
+                isNaturalDiamond: true,
+                isLabDiamond: true,
                 isActive: true,
             });
             setModalOpen(false);
@@ -254,15 +255,11 @@ const ProductForm = () => {
     const columnsProduct = [
         { field: 'id', headerName: 'Product ID', width: 230 },
         { field: 'name', headerName: 'Name', width: 300 },
-        { field: 'category', headerName: 'Category', width: 150 },
+        { field: 'category', headerName: 'Category', width: 120 },
         { field: 'isActive', headerName: 'Active', width: 100, type: 'boolean' },
-        { field: 'createdAt', headerName: 'Created On', flex: 1, minWidth: 200 },
-        { field: 'calculatedPrice', headerName: 'Price Starts From', width: 150, type: 'number', valueGetter: (params) => {
-            var value = params;
-            if (typeof params === 'number') {
-                value = params.toFixed(2);
-            }
-            return "₹" + value;
+        { field: 'createdAt', headerName: 'Created On', width: 160 },
+        { field: 'calculatedPrice', headerName: 'Starting Price', flex: 1, minWidth: 120, type: 'number', valueGetter: (params) => {
+            return formatAmount(params);
         }}
     ]
 
@@ -293,8 +290,8 @@ const ProductForm = () => {
                                     costOfLabour: "0",
                                     miscellaneousCost: "0",
                                     isCentralisedDiamond: false,
-                                    isNaturalDiamond: false,
-                                    isLabDiamond: false,
+                                    isNaturalDiamond: true,
+                                    isLabDiamond: true,
                                     isActive: true,
                                     isLandingPageProduct: false,
                                 });
