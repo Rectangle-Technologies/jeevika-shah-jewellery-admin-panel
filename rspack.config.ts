@@ -5,7 +5,13 @@ import * as RefreshPlugin from "@rspack/plugin-react-refresh";
 import { ModuleFederationPlugin } from "@module-federation/enhanced/rspack";
 
 
-import { mfConfig } from "./module-federation.config";
+// import { mfConfig } from "./module-federation.config";
+
+const mfConfig = {
+  name: "admin_panel",
+  exposes: {},
+  shared: ["react", "react-dom"],
+}
 
 const isDev = process.env.NODE_ENV === "development";
 
