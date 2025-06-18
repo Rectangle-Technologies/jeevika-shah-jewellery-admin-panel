@@ -51,12 +51,12 @@ const AddProductModal = (props) => {
 
             const productId = urlSplit[urlSplit.length - 1]
             const response = await axios.get(`${backendUrl}/products/get/${productId}`)
-            setProduct(response.data.body)
+            setProduct(response.data.body.product[0])
             setProductUrl('')
             setOrderProduct({
-                productId: response.data.body._id,
-                name: response.data.body.name,
-                image: response.data.body.images[0]
+                productId: response.data.body.product[0]._id,
+                name: response.data.body.product[0].name,
+                image: response.data.body.product[0].images[0]
             })
         } catch (error) {
             console.error('Error fetching product:', error)
@@ -68,6 +68,7 @@ const AddProductModal = (props) => {
             setGoButtonLoading(false)
         }
     }
+    console.log(product)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -152,15 +153,15 @@ const AddProductModal = (props) => {
                                 <Typography sx={{ fontSize: 14, mt: 2 }}>
                                     Product ID: {product._id}
                                 </Typography>
-                                <Grid container spacing={2} columns={12} sx={{ mt: 2 }}>
-                                    <Grid size={6}>
+                                <Grid container columns={12} spacing={2} sx={{ mt: 2 }}>
+                                    <Grid size={4}>
                                         <OutlinedInput
                                             placeholder='Quantity'
                                             fullWidth
                                             type='number'
                                             name='quantity'
                                             onChange={handleInputChange}
-                                            value={orderProduct.quantity}
+                                            value={orderProduct?.quantity}
                                         />
                                     </Grid>
                                     <Grid size={6}>
@@ -222,7 +223,7 @@ const AddProductModal = (props) => {
                                 </Select>
                             </Grid>
                             <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
-                                <img src={formatText(product.images[0])} alt={product.name} style={{ height: '180px', width: 'auto' }} />
+                                <img src={formatText(product.images[0])} alt={product.name} style={{ height: 'auto', width: '100%' }} />
                             </Grid>
                         </Grid>
                     </Paper>
