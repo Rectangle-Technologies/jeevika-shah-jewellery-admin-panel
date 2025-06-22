@@ -33,7 +33,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import DeleteIcon from '@mui/icons-material/Delete';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { calculatePricing } from "js-product-pricing-calculator";
 import formatAmount from "../helpers/formatAmount";
 
 const defaultSize = { displayName: "", weightOfMetal: "" };
@@ -47,6 +46,7 @@ const ProductForm = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [categories, setCategories] = useState([]);
     const [sizes, setSizes] = useState([]);
+    const [allSizes, setAllSizes] = useState([]);
     const [products, setProducts] = useState([]);
     const [page, setPage] = React.useState(1);
     const rowsPerPage = 20;
@@ -72,6 +72,15 @@ const ProductForm = () => {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+        if (name === "category") {
+            // If category is changed, reset sizes to default
+            setForm((prev) => ({
+                ...prev,
+                category: value,
+                sizes: allSizes[value] ? allSizes[value].map(size => ({ displayName: size.displayName, weightOfMetal: "" })) : [{ ...defaultSize }],
+            }));
+            return;
+        }
         setForm((prev) => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value,
@@ -211,11 +220,12 @@ const ProductForm = () => {
                     headers: getAuthHeader(),
                 });
                 setCategories(res.data?.body?.categories || []);
-                setSizes(res.data?.body?.sizes || []);
+                setAllSizes(res.data?.body?.sizes || []);
                 setForm((prev) => ({
                     ...prev,
                     category: res.data?.body?.categories?.[0]?.name || "",
-                    sizes: res.data?.body?.sizes?.map(size => ({ displayName: size.displayName, weightOfMetal: "" })) || [{ ...defaultSize }],
+                    // sizes: res.data?.body?.sizes?.map(size => ({ displayName: size.displayName, weightOfMetal: "" })) || [{ ...defaultSize }],
+                    sizes: res.data?.body?.sizes?.[res.data?.body?.categories?.[0]?.name] || [{ ...defaultSize }],
                 }));
 
                 const productsRes = await axios.get(`${backendUrl}/products/get-all`, {
@@ -258,9 +268,11 @@ const ProductForm = () => {
         { field: 'category', headerName: 'Category', width: 120 },
         { field: 'isActive', headerName: 'Active', width: 100, type: 'boolean' },
         { field: 'createdAt', headerName: 'Created On', width: 160 },
-        { field: 'calculatedPrice', headerName: 'Starting Price', flex: 1, minWidth: 120, type: 'number', valueGetter: (params) => {
-            return formatAmount(params);
-        }}
+        {
+            field: 'calculatedPrice', headerName: 'Starting Price', flex: 1, minWidth: 120, type: 'number', valueGetter: (params) => {
+                return formatAmount(params);
+            }
+        }
     ]
 
     return (
@@ -358,7 +370,54 @@ const ProductForm = () => {
                         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
                             {dialogBoxText}
                         </Typography>
-                        <Button type="submit" variant="contained" disabled={loading} onClick={handleSubmit}>
+                        {actionButtonText === "Update Product" && (
+                            <Button type="button" variant="contained" color="error" disabled={loading} onClick={async () => {
+                                if (!form._id) return;
+                                setLoading(true);
+                                try {
+                                    await axios.post(
+                                        `${backendUrl}/products/delete/${form._id}`,
+                                        {},
+                                        { headers: getAuthHeader() }
+                                    );
+                                    enqueueSnackbar("Product deleted!", { variant: "success" });
+                                    setModalOpen(false);
+                                    // Refresh products list
+                                    const res = await axios.get(`${backendUrl}/products/get-all`, {
+                                        headers: getAuthHeader(),
+                                    });
+                                    const updatedProducts = res.data.body.products.map(product => ({
+                                        ...product,
+                                        id: product._id,
+                                        createdAt: new Date(product.createdAt).toLocaleDateString('en-IN', {
+                                            year: '2-digit',
+                                            month: '2-digit',
+                                            day: '2-digit',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            hour12: true,
+                                        }),
+                                        updatedAt: new Date(product.updatedAt).toLocaleDateString('en-IN', {
+                                            year: '2-digit',
+                                            month: '2-digit',
+                                            day: '2-digit',
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            hour12: true,
+                                        }),
+                                    }));
+                                    setProducts(updatedProducts);
+                                } catch (error) {
+                                    enqueueSnackbar(error?.response?.data?.message || "Error deleting product", { variant: "error" });
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                            >
+                                Delete
+                            </Button>
+                        )}
+                        <Button type="submit" variant="contained" disabled={loading} onClick={handleSubmit} sx={{ ml: 2 }}>
                             {actionButtonText}
                         </Button>
                     </Toolbar>
