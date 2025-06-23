@@ -36,7 +36,7 @@
     "axios": "^1.9.0",
     "crypto": "^1.0.1",
     "dayjs": "^1.11.13",
-    "js-product-pricing-calculator": "^1.0.9",
+    "js-product-pricing-calculator": "^1.0.11",
     "notistack": "^3.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

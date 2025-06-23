@@ -154,6 +154,7 @@ const ProductForm = () => {
                     payload,
                     { headers: getAuthHeader() }
                 );
+                enqueueSnackbar("Product updated!", { variant: "success" });
             } else {
                 // Create mode: create new product
                 await axios.post(
@@ -161,8 +162,8 @@ const ProductForm = () => {
                     payload,
                     { headers: getAuthHeader() }
                 );
+                enqueueSnackbar("Product created!", { variant: "success" });
             }
-            enqueueSnackbar("Product created!", { variant: "success" });
             setForm({
                 name: "",
                 description: "",
