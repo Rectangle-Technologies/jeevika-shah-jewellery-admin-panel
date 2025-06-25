@@ -72,6 +72,8 @@ const ProductForm = () => {
         isActive: true,
         isChatWithUs: false
     });
+    const [goButtonLoading, setGoButtonLoading] = useState(false)
+    const [productSearchName, setProductSearchName] = useState('')
 
 
     const handleChange = (e) => {
@@ -212,12 +214,75 @@ const ProductForm = () => {
                 }),
             }));
             setProducts(updatedProducts);
+            setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
         } catch (error) {
             enqueueSnackbar(error?.response?.data?.message || "Error creating product", { variant: "error" });
         } finally {
             setLoading(false);
         }
     };
+
+    const handleSearch = async () => {
+        setGoButtonLoading(true)
+        try {
+            if (productSearchName === null || productSearchName === undefined || productSearchName === '') {
+                const productsRes = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
+                    headers: getAuthHeader(),
+                });
+                productsRes.data.body.products.forEach(product => {
+                    product.id = product._id; // Ensure id field is set for DataGrid
+                    product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
+                    product.updatedAt = new Date(product.updatedAt).toLocaleDateString('en-IN', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
+                });
+                setProducts(productsRes.data?.body?.products || []);
+                setTotalPages(Math.ceil(productsRes.data.body.totalProducts / rowsPerPage))
+            } else {
+                const res = await axios.get(`${backendUrl}/products/get-by-name?name=${productSearchName}`, {
+                    headers: getAuthHeader(),
+                })
+                res.data.body.products.forEach(product => {
+                    product.id = product._id; // Ensure id field is set for DataGrid
+                    product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
+                    product.updatedAt = new Date(product.updatedAt).toLocaleDateString('en-IN', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
+                });
+                setProducts(res.data?.body?.products || []);
+                setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
+            }
+        } catch (error) {
+            console.log(error)
+            enqueueSnackbar(error?.response?.data?.message || "Error creating product", { variant: "error" })
+        } finally {
+            setGoButtonLoading(false)
+        }
+    }
 
     React.useEffect(() => {
         const fetchCategories = async () => {
@@ -324,6 +389,32 @@ const ProductForm = () => {
                         >Add Product</Button>
                     </Grid>
                 </Grid>
+                <Grid container spacing={2} sx={{ mt: 3, display: 'flex' }}>
+                    <Grid item size={4}>
+                        <TextField
+                            placeholder='Porduct Name'
+                            fullWidth
+                            sx={{ mb: 2 }}
+                            required
+                            value={productSearchName}
+                            onChange={(e) => setProductSearchName(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearch();
+                                }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant='outlined'
+                            onClick={handleSearch}
+                            loading={goButtonLoading}
+                        >
+                            Go
+                        </Button>
+                    </Grid>
+                </Grid>
                 <Grid container sx={{ mt: 4 }}>
                     <Grid size={12}>
                         <DataGrid
@@ -424,6 +515,7 @@ const ProductForm = () => {
                                         }),
                                     }));
                                     setProducts(updatedProducts);
+                                    setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
                                 } catch (error) {
                                     enqueueSnackbar(error?.response?.data?.message || "Error deleting product", { variant: "error" });
                                 } finally {
