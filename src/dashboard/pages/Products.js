@@ -392,7 +392,7 @@ const ProductForm = () => {
                 <Grid container spacing={2} sx={{ mt: 3, display: 'flex' }}>
                     <Grid item size={4}>
                         <TextField
-                            placeholder='Porduct Name'
+                            placeholder='Product Name'
                             fullWidth
                             sx={{ mb: 2 }}
                             required
