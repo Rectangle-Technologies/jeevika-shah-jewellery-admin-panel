@@ -21,6 +21,7 @@ import {
     Toolbar,
     Avatar,
     InputAdornment,
+    Pagination,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -49,6 +50,7 @@ const ProductForm = () => {
     const [allSizes, setAllSizes] = useState([]);
     const [products, setProducts] = useState([]);
     const [page, setPage] = React.useState(1);
+    const [totalPages, setTotalPages] = React.useState(0)
     const rowsPerPage = 20;
     const [dialogBoxText, setDialogBoxText] = useState("Add New Product");
     const [actionButtonText, setActionButtonText] = useState("Add Product");
@@ -70,6 +72,9 @@ const ProductForm = () => {
         isActive: true,
         isChatWithUs: false
     });
+    const [goButtonLoading, setGoButtonLoading] = useState(false)
+    const [productSearchName, setProductSearchName] = useState('')
+
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -185,7 +190,7 @@ const ProductForm = () => {
             });
             setModalOpen(false);
             // Refresh products list
-            const res = await axios.get(`${backendUrl}/products/get-all`, {
+            const res = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
                 headers: getAuthHeader(),
             });
             const updatedProducts = res.data.body.products.map(product => ({
@@ -209,6 +214,7 @@ const ProductForm = () => {
                 }),
             }));
             setProducts(updatedProducts);
+            setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
         } catch (error) {
             enqueueSnackbar(error?.response?.data?.message || "Error creating product", { variant: "error" });
         } finally {
@@ -216,22 +222,11 @@ const ProductForm = () => {
         }
     };
 
-    React.useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const res = await axios.get(`${backendUrl}/products/get-all-categories`, {
-                    headers: getAuthHeader(),
-                });
-                setCategories(res.data?.body?.categories || []);
-                setAllSizes(res.data?.body?.sizes || []);
-                setForm((prev) => ({
-                    ...prev,
-                    category: res.data?.body?.categories?.[0]?.name || "",
-                    // sizes: res.data?.body?.sizes?.map(size => ({ displayName: size.displayName, weightOfMetal: "" })) || [{ ...defaultSize }],
-                    sizes: res.data?.body?.sizes?.[res.data?.body?.categories?.[0]?.name] || [{ ...defaultSize }],
-                }));
-
-                const productsRes = await axios.get(`${backendUrl}/products/get-all`, {
+    const handleSearch = async () => {
+        setGoButtonLoading(true)
+        try {
+            if (productSearchName === null || productSearchName === undefined || productSearchName === '') {
+                const productsRes = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
                     headers: getAuthHeader(),
                 });
                 productsRes.data.body.products.forEach(product => {
@@ -254,13 +249,88 @@ const ProductForm = () => {
                     });
                 });
                 setProducts(productsRes.data?.body?.products || []);
+                setTotalPages(Math.ceil(productsRes.data.body.totalProducts / rowsPerPage))
+            } else {
+                const res = await axios.get(`${backendUrl}/products/get-by-name?name=${productSearchName}`, {
+                    headers: getAuthHeader(),
+                })
+                res.data.body.products.forEach(product => {
+                    product.id = product._id; // Ensure id field is set for DataGrid
+                    product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
+                    product.updatedAt = new Date(product.updatedAt).toLocaleDateString('en-IN', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
+                });
+                setProducts(res.data?.body?.products || []);
+                setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
+            }
+        } catch (error) {
+            console.log(error)
+            enqueueSnackbar(error?.response?.data?.message || "Error creating product", { variant: "error" })
+        } finally {
+            setGoButtonLoading(false)
+        }
+    }
+
+    React.useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get(`${backendUrl}/products/get-all-categories`, {
+                    headers: getAuthHeader(),
+                });
+                setCategories(res.data?.body?.categories || []);
+                setAllSizes(res.data?.body?.sizes || []);
+                setForm((prev) => ({
+                    ...prev,
+                    category: res.data?.body?.categories?.[0]?.name || "",
+                    // sizes: res.data?.body?.sizes?.map(size => ({ displayName: size.displayName, weightOfMetal: "" })) || [{ ...defaultSize }],
+                    sizes: res.data?.body?.sizes?.[res.data?.body?.categories?.[0]?.name] || [{ ...defaultSize }],
+                }));
+
+                const productsRes = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
+                    headers: getAuthHeader(),
+                });
+                productsRes.data.body.products.forEach(product => {
+                    product.id = product._id; // Ensure id field is set for DataGrid
+                    product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
+                    product.updatedAt = new Date(product.updatedAt).toLocaleDateString('en-IN', {
+                        year: '2-digit',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                    });
+                });
+                setProducts(productsRes.data?.body?.products || []);
+                setTotalPages(Math.ceil(productsRes.data.body.totalProducts / rowsPerPage))
                 setLoading(false);
             } catch (error) {
+                console.error(error)
                 enqueueSnackbar("Failed to load categories", { variant: "error" });
             }
         };
         fetchCategories();
-    }, []);
+    }, [page]);
 
     // File input ref for uploading images
     const fileInputRefs = React.useRef([]);
@@ -319,8 +389,34 @@ const ProductForm = () => {
                         >Add Product</Button>
                     </Grid>
                 </Grid>
+                <Grid container spacing={2} sx={{ mt: 3, display: 'flex' }}>
+                    <Grid item size={4}>
+                        <TextField
+                            placeholder='Porduct Name'
+                            fullWidth
+                            sx={{ mb: 2 }}
+                            required
+                            value={productSearchName}
+                            onChange={(e) => setProductSearchName(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSearch();
+                                }
+                            }}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            variant='outlined'
+                            onClick={handleSearch}
+                            loading={goButtonLoading}
+                        >
+                            Go
+                        </Button>
+                    </Grid>
+                </Grid>
                 <Grid container sx={{ mt: 4 }}>
-                    <Grid>
+                    <Grid size={12}>
                         <DataGrid
                             rows={products}
                             columns={columnsProduct}
@@ -350,6 +446,14 @@ const ProductForm = () => {
                                 setActionButtonText("Update Product");
                             }}
                         />
+                    </Grid>
+                    <Grid item size={12} sx={{
+                        mt: 2,
+                        display: { xs: 'none', md: 'flex' },
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <Pagination count={totalPages} onChange={(event, value) => setPage(value)} />
                     </Grid>
                 </Grid>
             </Box>
@@ -387,7 +491,7 @@ const ProductForm = () => {
                                     enqueueSnackbar("Product deleted!", { variant: "success" });
                                     setModalOpen(false);
                                     // Refresh products list
-                                    const res = await axios.get(`${backendUrl}/products/get-all`, {
+                                    const res = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
                                         headers: getAuthHeader(),
                                     });
                                     const updatedProducts = res.data.body.products.map(product => ({
@@ -411,6 +515,7 @@ const ProductForm = () => {
                                         }),
                                     }));
                                     setProducts(updatedProducts);
+                                    setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
                                 } catch (error) {
                                     enqueueSnackbar(error?.response?.data?.message || "Error deleting product", { variant: "error" });
                                 } finally {
