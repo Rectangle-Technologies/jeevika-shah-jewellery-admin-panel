@@ -21,6 +21,7 @@ import {
     Toolbar,
     Avatar,
     InputAdornment,
+    Pagination,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -49,6 +50,7 @@ const ProductForm = () => {
     const [allSizes, setAllSizes] = useState([]);
     const [products, setProducts] = useState([]);
     const [page, setPage] = React.useState(1);
+    const [totalPages, setTotalPages] = React.useState(0)
     const rowsPerPage = 20;
     const [dialogBoxText, setDialogBoxText] = useState("Add New Product");
     const [actionButtonText, setActionButtonText] = useState("Add Product");
@@ -70,6 +72,7 @@ const ProductForm = () => {
         isActive: true,
         isChatWithUs: false
     });
+
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -185,7 +188,7 @@ const ProductForm = () => {
             });
             setModalOpen(false);
             // Refresh products list
-            const res = await axios.get(`${backendUrl}/products/get-all`, {
+            const res = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
                 headers: getAuthHeader(),
             });
             const updatedProducts = res.data.body.products.map(product => ({
@@ -231,7 +234,7 @@ const ProductForm = () => {
                     sizes: res.data?.body?.sizes?.[res.data?.body?.categories?.[0]?.name] || [{ ...defaultSize }],
                 }));
 
-                const productsRes = await axios.get(`${backendUrl}/products/get-all`, {
+                const productsRes = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
                     headers: getAuthHeader(),
                 });
                 productsRes.data.body.products.forEach(product => {
@@ -254,13 +257,15 @@ const ProductForm = () => {
                     });
                 });
                 setProducts(productsRes.data?.body?.products || []);
+                setTotalPages(Math.ceil(productsRes.data.body.totalProducts / rowsPerPage))
                 setLoading(false);
             } catch (error) {
+                console.error(error)
                 enqueueSnackbar("Failed to load categories", { variant: "error" });
             }
         };
         fetchCategories();
-    }, []);
+    }, [page]);
 
     // File input ref for uploading images
     const fileInputRefs = React.useRef([]);
@@ -320,7 +325,7 @@ const ProductForm = () => {
                     </Grid>
                 </Grid>
                 <Grid container sx={{ mt: 4 }}>
-                    <Grid>
+                    <Grid size={12}>
                         <DataGrid
                             rows={products}
                             columns={columnsProduct}
@@ -350,6 +355,14 @@ const ProductForm = () => {
                                 setActionButtonText("Update Product");
                             }}
                         />
+                    </Grid>
+                    <Grid item size={12} sx={{
+                        mt: 2,
+                        display: { xs: 'none', md: 'flex' },
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                        <Pagination count={totalPages} onChange={(event, value) => setPage(value)} />
                     </Grid>
                 </Grid>
             </Box>
@@ -387,7 +400,7 @@ const ProductForm = () => {
                                     enqueueSnackbar("Product deleted!", { variant: "success" });
                                     setModalOpen(false);
                                     // Refresh products list
-                                    const res = await axios.get(`${backendUrl}/products/get-all`, {
+                                    const res = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
                                         headers: getAuthHeader(),
                                     });
                                     const updatedProducts = res.data.body.products.map(product => ({
