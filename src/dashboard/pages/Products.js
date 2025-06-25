@@ -68,6 +68,7 @@ const ProductForm = () => {
         isNaturalDiamond: true,
         isLabDiamond: true,
         isActive: true,
+        isChatWithUs: false
     });
 
     const handleChange = (e) => {
@@ -180,6 +181,7 @@ const ProductForm = () => {
                 isNaturalDiamond: true,
                 isLabDiamond: true,
                 isActive: true,
+                isChatWithUs: false
             });
             setModalOpen(false);
             // Refresh products list
@@ -307,6 +309,7 @@ const ProductForm = () => {
                                     isLabDiamond: true,
                                     isActive: true,
                                     isLandingPageProduct: false,
+                                    isChatWithUs: false
                                 });
                                 setDialogBoxText("Add New Product");
                                 setActionButtonText("Add Product");
@@ -506,7 +509,7 @@ const ProductForm = () => {
                                 variant="filled"
                                 label="Cost of Natural Diamond" name="costOfNaturalDiamond"
                                 value={form.costOfNaturalDiamond} onChange={handleChange}
-                                fullWidth required disabled={form.isCentralisedDiamond}
+                                fullWidth required disabled={form.isCentralisedDiamond || !form.isNaturalDiamond}
                                 slotProps={{
                                     input: {
                                         startAdornment: <InputAdornment position="start">₹</InputAdornment>,
@@ -519,7 +522,7 @@ const ProductForm = () => {
                                 variant="filled"
                                 label="Cost of Lab Diamond" name="costOfLabDiamond"
                                 value={form.costOfLabDiamond} onChange={handleChange}
-                                fullWidth required disabled={form.isCentralisedDiamond}
+                                fullWidth required disabled={form.isCentralisedDiamond || !form.isLabDiamond}
                                 slotProps={{
                                     input: {
                                         startAdornment: <InputAdornment position="start">₹</InputAdornment>,
@@ -567,34 +570,40 @@ const ProductForm = () => {
                         </>
                         )}
                         <Grid container size={12}>
-                            <Grid size={3}>
+                            <Grid size={4}>
                                 <FormControlLabel
                                     control={<Switch checked={form.isCentralisedDiamond} onChange={handleChange} name="isCentralisedDiamond" />}
                                     label="Centralised Diamond Pricing"
                                 />
                             </Grid>
-                            <Grid size={2.4}>
+                            <Grid size={4}>
                                 <FormControlLabel
                                     control={<Switch checked={form.isNaturalDiamond} onChange={handleChange} name="isNaturalDiamond" />}
                                     label="Natural Diamond"
                                 />
                             </Grid>
-                            <Grid size={2.4}>
+                            <Grid size={4}>
                                 <FormControlLabel
                                     control={<Switch checked={form.isLabDiamond} onChange={handleChange} name="isLabDiamond" />}
                                     label="Lab Diamond"
                                 />
                             </Grid>
-                            <Grid size={1.8}>
+                            <Grid size={4}>
                                 <FormControlLabel
                                     control={<Switch checked={form.isActive} onChange={handleChange} name="isActive" />}
                                     label="Active"
                                 />
                             </Grid>
-                            <Grid size={2.4}>
+                            <Grid size={4}>
                                 <FormControlLabel
                                     control={<Switch checked={form.isLandingPageProduct} onChange={handleChange} name="isLandingPageProduct" />}
                                     label="Landing Page Product"
+                                />
+                            </Grid>
+                            <Grid size={4}>
+                                <FormControlLabel
+                                    control={<Switch checked={form.isChatWithUs} onChange={handleChange} name="isChatWithUs" />}
+                                    label="Chat With Us"
                                 />
                             </Grid>
                         </Grid>
