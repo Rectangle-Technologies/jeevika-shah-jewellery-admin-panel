@@ -93,16 +93,6 @@ const ProductForm = () => {
         }));
     };
 
-    const handleImageChange = (idx, value) => {
-        const images = [...form.images];
-        images[idx] = value;
-        setForm((prev) => ({ ...prev, images }));
-    };
-
-    const handleAddImage = () => {
-        setForm((prev) => ({ ...prev, images: [...prev.images, ""] }));
-    };
-
     const handleRemoveImage = (idx) => {
         const images = form.images.filter((_, i) => i !== idx);
         setForm((prev) => ({ ...prev, images }));
@@ -190,31 +180,7 @@ const ProductForm = () => {
             });
             setModalOpen(false);
             // Refresh products list
-            const res = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
-                headers: getAuthHeader(),
-            });
-            const updatedProducts = res.data.body.products.map(product => ({
-                ...product,
-                id: product._id, // Ensure id field is set for DataGrid
-                createdAt: new Date(product.createdAt).toLocaleDateString('en-IN', {
-                    year: '2-digit',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                }),
-                updatedAt: new Date(product.updatedAt).toLocaleDateString('en-IN', {
-                    year: '2-digit',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true,
-                }),
-            }));
-            setProducts(updatedProducts);
-            setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
+            fetchProducts()
         } catch (error) {
             enqueueSnackbar(error?.response?.data?.message || "Error creating product", { variant: "error" });
         } finally {
@@ -222,34 +188,43 @@ const ProductForm = () => {
         }
     };
 
+    const fetchProducts = async () => {
+        try {
+            const productsRes = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
+                headers: getAuthHeader(),
+            });
+            productsRes.data.body.products.forEach(product => {
+                product.id = product._id; // Ensure id field is set for DataGrid
+                product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
+                    year: '2-digit',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                });
+                product.updatedAt = new Date(product.updatedAt).toLocaleDateString('en-IN', {
+                    year: '2-digit',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true,
+                });
+            });
+            setProducts(productsRes.data?.body?.products || []);
+            setTotalPages(Math.ceil(productsRes.data.body.totalProducts / rowsPerPage))
+        } catch (error) {
+            console.error("Error fetching products: ", error)
+            enqueueSnackbar(error?.response?.data?.message || "Error fetching products", { variant: 'error' })
+        }
+    }
+
     const handleSearch = async () => {
         setGoButtonLoading(true)
         try {
             if (productSearchName === null || productSearchName === undefined || productSearchName === '') {
-                const productsRes = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
-                    headers: getAuthHeader(),
-                });
-                productsRes.data.body.products.forEach(product => {
-                    product.id = product._id; // Ensure id field is set for DataGrid
-                    product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
-                        year: '2-digit',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    });
-                    product.updatedAt = new Date(product.updatedAt).toLocaleDateString('en-IN', {
-                        year: '2-digit',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    });
-                });
-                setProducts(productsRes.data?.body?.products || []);
-                setTotalPages(Math.ceil(productsRes.data.body.totalProducts / rowsPerPage))
+                fetchProducts()
             } else {
                 const res = await axios.get(`${backendUrl}/products/get-by-name?name=${productSearchName}`, {
                     headers: getAuthHeader(),
@@ -299,34 +274,12 @@ const ProductForm = () => {
                     sizes: res.data?.body?.sizes?.[res.data?.body?.categories?.[0]?.name] || [{ ...defaultSize }],
                 }));
 
-                const productsRes = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
-                    headers: getAuthHeader(),
-                });
-                productsRes.data.body.products.forEach(product => {
-                    product.id = product._id; // Ensure id field is set for DataGrid
-                    product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
-                        year: '2-digit',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    });
-                    product.updatedAt = new Date(product.updatedAt).toLocaleDateString('en-IN', {
-                        year: '2-digit',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: true,
-                    });
-                });
-                setProducts(productsRes.data?.body?.products || []);
-                setTotalPages(Math.ceil(productsRes.data.body.totalProducts / rowsPerPage))
-                setLoading(false);
+                fetchProducts()
             } catch (error) {
                 console.error(error)
                 enqueueSnackbar("Failed to load categories", { variant: "error" });
+            } finally {
+                setLoading(false);
             }
         };
         fetchCategories();
@@ -491,31 +444,7 @@ const ProductForm = () => {
                                     enqueueSnackbar("Product deleted!", { variant: "success" });
                                     setModalOpen(false);
                                     // Refresh products list
-                                    const res = await axios.get(`${backendUrl}/products/get-all?page=${page}&size=${rowsPerPage}`, {
-                                        headers: getAuthHeader(),
-                                    });
-                                    const updatedProducts = res.data.body.products.map(product => ({
-                                        ...product,
-                                        id: product._id,
-                                        createdAt: new Date(product.createdAt).toLocaleDateString('en-IN', {
-                                            year: '2-digit',
-                                            month: '2-digit',
-                                            day: '2-digit',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            hour12: true,
-                                        }),
-                                        updatedAt: new Date(product.updatedAt).toLocaleDateString('en-IN', {
-                                            year: '2-digit',
-                                            month: '2-digit',
-                                            day: '2-digit',
-                                            hour: '2-digit',
-                                            minute: '2-digit',
-                                            hour12: true,
-                                        }),
-                                    }));
-                                    setProducts(updatedProducts);
-                                    setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
+                                    fetchProducts()
                                 } catch (error) {
                                     enqueueSnackbar(error?.response?.data?.message || "Error deleting product", { variant: "error" });
                                 } finally {
