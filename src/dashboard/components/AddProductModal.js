@@ -5,9 +5,10 @@ import React from 'react'
 import { backendUrl } from '../constants/url';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { formatText } from '../helpers/formatText';
+import getAuthHeader from '../constants/authHeader';
 
 const AddProductModal = (props) => {
-    const [productUrl, setProductUrl] = React.useState('')
+    const [skuId, setSkuId] = React.useState('')
     const [product, setProduct] = React.useState(null)
     const [orderProduct, setOrderProduct] = React.useState(null)
     const [goButtonLoading, setGoButtonLoading] = React.useState(false)
@@ -31,32 +32,23 @@ const AddProductModal = (props) => {
     const getProduct = async () => {
         setGoButtonLoading(true)
         try {
-            if (!productUrl) {
-                enqueueSnackbar("Please enter a valid product URL", {
+            if (!skuId) {
+                enqueueSnackbar("Please enter a valid product SKU ID", {
                     autoHideDuration: 2000,
                     variant: "error",
                 });
                 return
             }
-            const urlSplit = productUrl.split('/')
-
-            // Check if the URL is valid
-            if (urlSplit.length === 0) {
-                enqueueSnackbar("Please enter a valid product URL", {
-                    autoHideDuration: 2000,
-                    variant: "error",
-                });
-                return
-            }
-
-            const productId = urlSplit[urlSplit.length - 1]
-            const response = await axios.get(`${backendUrl}/products/get/${productId}`)
-            setProduct(response.data.body.product[0])
-            setProductUrl('')
+            const response = await axios.get(`${backendUrl}/products/get-by-sku-id/${skuId}`, {
+                headers: getAuthHeader()
+            })
+            setProduct(response.data.body.product)
+            setSkuId('')
             setOrderProduct({
-                productId: response.data.body.product[0]._id,
-                name: response.data.body.product[0].name,
-                image: response.data.body.product[0].images[0]
+                productId: response.data.body.product._id,
+                skuId: response.data.body.product.skuId,
+                name: response.data.body.product.name,
+                image: response.data.body.product.images[0]
             })
         } catch (error) {
             console.error('Error fetching product:', error)
@@ -68,7 +60,6 @@ const AddProductModal = (props) => {
             setGoButtonLoading(false)
         }
     }
-    console.log(product)
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -121,9 +112,9 @@ const AddProductModal = (props) => {
                 <Grid container spacing={2} columns={12}>
                     <Grid size={10}>
                         <OutlinedInput
-                            placeholder='Product URL'
-                            value={productUrl}
-                            onChange={(e) => setProductUrl(e.target.value)}
+                            placeholder='Product SKU ID'
+                            value={skuId}
+                            onChange={(e) => setSkuId(e.target.value)}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                     getProduct()
@@ -151,7 +142,7 @@ const AddProductModal = (props) => {
                                     {product.name}
                                 </Typography>
                                 <Typography sx={{ fontSize: 14, mt: 2 }}>
-                                    Product ID: {product._id}
+                                    SKU ID: {product.skuId}
                                 </Typography>
                                 <Grid container columns={12} spacing={2} sx={{ mt: 2 }}>
                                     <Grid size={4}>

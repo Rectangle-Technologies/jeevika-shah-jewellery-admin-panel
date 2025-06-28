@@ -160,7 +160,7 @@ const NewCustomOrder = () => {
                                             {product.name}
                                         </Typography>
                                         <Typography sx={{ fontSize: 14, mt: 2 }}>
-                                            Product ID: {product.productId}
+                                            SKU ID: {product.skuId}
                                         </Typography>
                                         <Typography sx={{ fontSize: 14, mt: 2 }}>
                                             Quantity: {product.quantity}

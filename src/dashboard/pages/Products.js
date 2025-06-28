@@ -194,7 +194,7 @@ const ProductForm = () => {
                 headers: getAuthHeader(),
             });
             productsRes.data.body.products.forEach(product => {
-                product.id = product._id; // Ensure id field is set for DataGrid
+                product.id = product.skuId; // Ensure id field is set for DataGrid
                 product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
                     year: '2-digit',
                     month: '2-digit',
@@ -230,7 +230,7 @@ const ProductForm = () => {
                     headers: getAuthHeader(),
                 })
                 res.data.body.products.forEach(product => {
-                    product.id = product._id; // Ensure id field is set for DataGrid
+                    product.id = product.skuId; // Ensure id field is set for DataGrid
                     product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
                         year: '2-digit',
                         month: '2-digit',
@@ -289,7 +289,7 @@ const ProductForm = () => {
     const fileInputRefs = React.useRef([]);
 
     const columnsProduct = [
-        { field: 'id', headerName: 'Product ID', width: 230 },
+        { field: 'id', headerName: 'SKU ID', width: 150 },
         { field: 'name', headerName: 'Name', width: 300 },
         { field: 'category', headerName: 'Category', width: 120 },
         { field: 'isActive', headerName: 'Active', width: 100, type: 'boolean' },
@@ -463,8 +463,8 @@ const ProductForm = () => {
 
                 <Paper sx={{ p: 3, mb: 4, borderRadius: 2, boxShadow: 3, border: "1px solid #d0d0d0", minHeight: "80vh", padding: 6, overflowY: "auto" }}>
                     <Grid container spacing={2}>
-                        {form._id && (
-                            <Grid size={12}>
+                        {form._id && (<>
+                            <Grid size={6}>
                                 <TextField
                                     variant="filled"
                                     label="Product ID"
@@ -475,6 +475,18 @@ const ProductForm = () => {
                                     sx={{ mb: 2 }}
                                 />
                             </Grid>
+                            <Grid size={6}>
+                                <TextField
+                                    variant="filled"
+                                    label="SKU ID"
+                                    name="skuId"
+                                    value={form.skuId}
+                                    disabled
+                                    fullWidth
+                                    sx={{ mb: 2 }}
+                                />
+                            </Grid>
+                            </>
                         )}
                         <Grid size={6}>
                             <TextField label="Name" variant="filled" name="name" value={form.name} onChange={handleChange} fullWidth required />
