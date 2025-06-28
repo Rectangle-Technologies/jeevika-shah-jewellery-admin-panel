@@ -194,7 +194,8 @@ const ProductForm = () => {
                 headers: getAuthHeader(),
             });
             productsRes.data.body.products.forEach(product => {
-                product.id = product.skuId; // Ensure id field is set for DataGrid
+                product.id = product._id; // Ensure id field is set for DataGrid
+                product.skuId = product.skuId // Fallback to _id if skuId is not available
                 product.createdAt = new Date(product.createdAt).toLocaleDateString('en-IN', {
                     year: '2-digit',
                     month: '2-digit',
@@ -289,7 +290,7 @@ const ProductForm = () => {
     const fileInputRefs = React.useRef([]);
 
     const columnsProduct = [
-        { field: 'id', headerName: 'SKU ID', width: 150 },
+        { field: 'skuId', headerName: 'SKU ID', width: 150 },
         { field: 'name', headerName: 'Name', width: 300 },
         { field: 'category', headerName: 'Category', width: 120 },
         { field: 'isActive', headerName: 'Active', width: 100, type: 'boolean' },
