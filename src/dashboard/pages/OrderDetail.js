@@ -174,7 +174,7 @@ const OrderDetail = () => {
                                                             {product.productId.name}
                                                         </Typography>
                                                         <Typography sx={{ fontSize: 14, mt: 2 }}>
-                                                            Product ID: {product.productId._id}
+                                                            SKU ID: {product.productId.skuId}
                                                         </Typography>
                                                         <Typography sx={{ fontSize: 14, mt: 2 }}>
                                                             Quantity: {product.quantity}

@@ -110,7 +110,7 @@ const EditProductModal = (props) => {
                                         {product.name}
                                     </Typography>
                                     <Typography sx={{ fontSize: 14, mt: 2 }}>
-                                        Product ID: {product._id}
+                                        SKU ID: {product.skuId}
                                     </Typography>
                                     <Grid container spacing={2} columns={12} sx={{ mt: 2 }}>
                                         <Grid size={6}>
