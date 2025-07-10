@@ -71,6 +71,7 @@ const HomeContent = () => {
 			{
 				key: form.key.key,
 				value: form.value,
+				isImage: form.isImage
 			},
 			{
 				headers: {
@@ -153,6 +154,14 @@ const HomeContent = () => {
 			minWidth: 150,
 			renderCell: (params) => {
 				const [isModalOpen, setIsModalOpen] = useState(false);
+				// Try to determine if the value is an image or video
+				let isImage = false;
+				try {
+					isImage = params.row.isImage
+					console.log("isImage: ", isImage);
+				} catch (e) {
+					isImage = false;
+				}
 				return (
 					<React.Fragment>
 						{!isModalOpen && (
@@ -163,7 +172,7 @@ const HomeContent = () => {
 								}}
 								sx={{ textTransform: 'none' }}
 							>
-								View Image
+								View {isImage ? "Image" : "Video"}
 							</Button>
 						)}
 						{isModalOpen && (
@@ -173,7 +182,14 @@ const HomeContent = () => {
 								fullWidth
 								maxWidth="md"
 							>
-								<img src={params.value} alt={params.row.key} style={{ width: '100%', maxHeight: '80vh' }} />
+								{isImage ? (
+									<img src={params.value} alt={params.row.key} style={{ width: '100%', maxHeight: '80vh' }} />
+								) : (
+									<video width="100%" controls style={{ maxHeight: '80vh' }}>
+										<source src={params.value} type="video/mp4" />
+										Your browser does not support the video tag.
+									</video>
+								)}
 								<Button
 									variant="contained"
 									color="primary"
@@ -183,7 +199,6 @@ const HomeContent = () => {
 									Close
 								</Button>
 							</Dialog>
-
 						)}
 					</React.Fragment>
 				)
@@ -312,10 +327,10 @@ const HomeContent = () => {
 								startIcon={<CloudUploadIcon />}
 								sx={{ mb: 2 }}
 							>
-								Upload Image
+								Upload Image/Video
 								<input
 									type="file"
-									accept="image/*"
+									accept="image/*,video/*"
 									multiple={false}
 									hidden
 									onChange={async (e) => {
@@ -326,7 +341,6 @@ const HomeContent = () => {
 										for (const file of files) {
 											const formData = new FormData();
 											formData.append("file", file);
-											console.log("Uploading file:", formData);
 											try {
 												const res = await axios.post(
 													`${backendUrl.replace(/\/$/, "")}/utils/upload`,
@@ -339,11 +353,12 @@ const HomeContent = () => {
 													}
 												);
 												const url = res.data?.filename || res.data?.body?.filename;
-												console.log("url: ", url);
+												console.log("File upload response:", file);
 												if (url) {
 													setForm(prev => ({
 														...prev,
-														value: url
+														value: url,
+														isImage: file.type.startsWith("image/")
 													}));
 													enqueueSnackbar(`Image "${file.name}" uploaded!`, { variant: "success" });
 												} else {
@@ -363,13 +378,24 @@ const HomeContent = () => {
 						</Grid>
 
 						<Grid item xs={6} sm={4} md={3} style={{ display: "flex", justifyContent: "center", position: "relative" }}>
-							{form.value.length > 0 && <img src={form.value} style={{
-								width: "500px",
-								height: "500px",
-								objectFit: "cover",
-								borderRadius: 4,
-								cursor: "pointer",
-							}} />}
+							{form.value.length > 0 && (
+								form.isImage ? (
+									<img
+										src={form.value}
+										style={{
+											width: "500px",
+											height: "500px",
+											objectFit: "cover",
+											borderRadius: 4,
+											cursor: "pointer",
+										}}
+									/>
+								) : (
+									<video width="500" controls>
+										<source src={form.value} type="video/mp4" />
+									</video>
+								)
+							)}
 						</Grid>
 					</Grid>
 				</Paper>

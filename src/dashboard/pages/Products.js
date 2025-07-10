@@ -670,17 +670,16 @@ const ProductForm = () => {
                         </Grid>
                         <Divider sx={{ width: "100%", my: 2 }} />
                         <Grid size={12}>
-                            {/* Multi-file upload button */}
                             <Button
                                 variant="contained"
                                 component="label"
                                 startIcon={<CloudUploadIcon />}
                                 sx={{ mb: 2 }}
                             >
-                                Upload Images
+                                Upload Images / Videos
                                 <input
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/*,video/*"
                                     multiple
                                     hidden
                                     onChange={async (e) => {
