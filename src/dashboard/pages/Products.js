@@ -92,10 +92,24 @@ const ProductForm = () => {
             [name]: type === "checkbox" ? checked : value,
         }));
     };
-
-    const handleRemoveImage = (idx) => {
-        const images = form.images.filter((_, i) => i !== idx);
-        setForm((prev) => ({ ...prev, images }));
+    const handleRemoveImage = async (idx) => {
+        try {
+            const imageUrl = form.images[idx];
+            // Delete the image from S3 via API
+            await axios.delete(`${backendUrl}/utils/delete-image`, {
+                headers: getAuthHeader(),
+                data: { imageUrl }
+            });
+            
+            // Remove the image from the form state
+            const images = form.images.filter((_, i) => i !== idx);
+            setForm((prev) => ({ ...prev, images }));
+            
+            enqueueSnackbar("Image deleted successfully", { variant: "success" });
+        } catch (error) {
+            console.error("Error deleting image:", error);
+            enqueueSnackbar(error?.response?.data?.message || "Failed to delete image", { variant: "error" });
+        }
     };
 
     const handleSizeChange = (idx, field, value) => {
@@ -253,7 +267,7 @@ const ProductForm = () => {
                 setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
             enqueueSnackbar(error?.response?.data?.message || "Error creating product", { variant: "error" })
         } finally {
             setGoButtonLoading(false)
@@ -656,17 +670,16 @@ const ProductForm = () => {
                         </Grid>
                         <Divider sx={{ width: "100%", my: 2 }} />
                         <Grid size={12}>
-                            {/* Multi-file upload button */}
                             <Button
                                 variant="contained"
                                 component="label"
                                 startIcon={<CloudUploadIcon />}
                                 sx={{ mb: 2 }}
                             >
-                                Upload Images
+                                Upload Images / Videos
                                 <input
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/*,video/*"
                                     multiple
                                     hidden
                                     onChange={async (e) => {
@@ -697,7 +710,13 @@ const ProductForm = () => {
                                                     enqueueSnackbar(`Upload succeeded for "${file.name}" but no URL returned`, { variant: "warning" });
                                                 }
                                             } catch (error) {
-                                                enqueueSnackbar(`Image upload failed for "${file.name}"`, { variant: "error" });
+                                                const apiMsg = error?.response?.data?.message;
+                                                enqueueSnackbar(
+                                                    apiMsg
+                                                        ? `Image upload failed for "${file.name}": ${apiMsg}`
+                                                        : `Image upload failed for "${file.name}"`,
+                                                    { variant: "error" }
+                                                );
                                             }
                                         }
                                         // Reset the input value so the same files can be selected again if needed
