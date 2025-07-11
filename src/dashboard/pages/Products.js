@@ -267,7 +267,7 @@ const ProductForm = () => {
                 setTotalPages(Math.ceil(res.data.body.totalProducts / rowsPerPage))
             }
         } catch (error) {
-            console.log(error)
+            console.error(error)
             enqueueSnackbar(error?.response?.data?.message || "Error creating product", { variant: "error" })
         } finally {
             setGoButtonLoading(false)

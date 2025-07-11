@@ -102,7 +102,6 @@ const HomeContent = () => {
 					headers: getAuthHeader(),
 				});
 				setCategories(res.data?.body?.categories || []);
-				console.log("Fetched categories:", res.data?.body?.categories);
 				setLoading(false);
 
 				// Get all content for the home page
@@ -158,7 +157,6 @@ const HomeContent = () => {
 				let isImage = false;
 				try {
 					isImage = params.row.isImage
-					console.log("isImage: ", isImage);
 				} catch (e) {
 					isImage = false;
 				}
@@ -205,8 +203,6 @@ const HomeContent = () => {
 			}
 		}
 	]
-
-	console.log("Refresh state:", refresh);
 
 	return (
 		<React.Fragment>
@@ -335,7 +331,6 @@ const HomeContent = () => {
 									hidden
 									onChange={async (e) => {
 										const files = Array.from(e.target.files);
-										console.log("Selected files:", files);
 										setLoader(true);
 										if (!files.length) return;
 										for (const file of files) {
@@ -353,7 +348,6 @@ const HomeContent = () => {
 													}
 												);
 												const url = res.data?.filename || res.data?.body?.filename;
-												console.log("File upload response:", file);
 												if (url) {
 													setForm(prev => ({
 														...prev,
