@@ -37,7 +37,7 @@ export default defineConfig({
     // You need to set a unique value that is not equal to other applications
     uniqueName: "admin_panel",
     // publicPath must be configured if using manifest
-    publicPath: "https://jeevika-shah-admin.netlify.app/",
+    publicPath: "https://admin.jeevikashah.com/",
   },
 
   experiments: {
