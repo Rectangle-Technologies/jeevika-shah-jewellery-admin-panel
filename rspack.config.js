@@ -83,7 +83,7 @@ export default defineConfig({
   },
   plugins: [
     new rspack.HtmlRspackPlugin({
-      template: "./public/index.html",
+      template: "./index.html",
     }),
     new ModuleFederationPlugin(mfConfig),
     null,
