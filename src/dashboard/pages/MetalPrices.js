@@ -36,9 +36,10 @@ const MetalPrices = () => {
 
     const handleSubmit = async () => {
         setIsSubmitLoading(true)
+        console.log('Submitting prices:', prices)
         try {
             // Validate input values
-            if (!prices?.goldPricePerGram || !prices?.naturalDiamondPricePerCarat || !prices?.labDiamondPricePerCarat) {
+            if (prices?.goldPricePerGram === '' || prices?.naturalDiamondPricePerCarat === '' || prices?.labDiamondPricePerCarat === '') {
                 enqueueSnackbar("Please fill all the fields", {
                     autoHideDuration: 2000,
                     variant: "error",
