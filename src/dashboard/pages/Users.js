@@ -1,11 +1,11 @@
 import { Box, Button, Grid, Pagination, TextField, Typography } from '@mui/material'
-import { enqueueSnackbar } from 'notistack'
-import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { backendUrl } from '../constants/url'
-import getAuthHeader from '../constants/authHeader'
 import { DataGrid } from '@mui/x-data-grid'
 import axios from 'axios'
+import { enqueueSnackbar } from 'notistack'
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+import getAuthHeader from '../constants/authHeader'
+import { backendUrl } from '../constants/url'
 import { formatText } from '../helpers/formatText'
 
 const Users = () => {
@@ -93,7 +93,7 @@ const Users = () => {
     }
 
     React.useEffect(() => {
-            fetchUsers()
+        fetchUsers()
     }, [page])
 
     return (
@@ -143,6 +143,7 @@ const Users = () => {
                                 cursor: 'pointer'
                             }
                         }}
+                        showToolbar
                     />
                 </Grid>
                 <Grid item xs={12} width='100%' sx={{
