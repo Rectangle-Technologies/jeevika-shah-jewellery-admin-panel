@@ -56,7 +56,7 @@ const EditProductModal = (props) => {
 
     const handleSubmit = async () => {
         // Validate input values
-        if (!orderProduct?.quantity || !orderProduct?.size || !orderProduct?.price) {
+        if (!orderProduct?.quantity || !orderProduct?.size || !orderProduct?.price || !orderProduct?.diamondType || !orderProduct?.karatOfGold) {
             enqueueSnackbar("Please fill all the fields", {
                 autoHideDuration: 2000,
                 variant: "error",
@@ -72,6 +72,13 @@ const EditProductModal = (props) => {
         }
         if (orderProduct?.price <= 0) {
             enqueueSnackbar("Please enter a valid price", {
+                autoHideDuration: 2000,
+                variant: "error",
+            });
+            return
+        }
+        if (!orderProduct?.karatOfGold || orderProduct?.karatOfGold <= 0) {
+            enqueueSnackbar("Please enter a valid karat of gold", {
                 autoHideDuration: 2000,
                 variant: "error",
             });
@@ -147,16 +154,32 @@ const EditProductModal = (props) => {
                                             </Select>
                                         </Grid>
                                     </Grid>
-                                    <Box sx={{ mt: 2 }}>
-                                        <OutlinedInput
-                                            placeholder='Price'
-                                            fullWidth
-                                            name='price'
-                                            onChange={handleInputChange}
-                                            startAdornment={<InputAdornment position="start">₹</InputAdornment>}
-                                            value={orderProduct.price}
-                                        />
-                                    </Box>
+                                    <Grid container columns={12} spacing={2} sx={{ mt: 2 }}>
+                                        <Grid size={6}>
+                                            <Box>
+                                                <OutlinedInput
+                                                    placeholder='Price'
+                                                    fullWidth
+                                                    name='price'
+                                                    onChange={handleInputChange}
+                                                    startAdornment={<InputAdornment position="start">₹</InputAdornment>}
+                                                    value={orderProduct.price}
+                                                />
+                                            </Box>
+                                        </Grid>
+                                        <Grid size={6}>
+                                            <Box>
+                                                <OutlinedInput
+                                                    placeholder='Karat of Gold'
+                                                    fullWidth
+                                                    name='karatOfGold'
+                                                    onChange={handleInputChange}
+                                                    endAdornment={<InputAdornment position="end">K</InputAdornment>}
+                                                    value={orderProduct.karatOfGold}
+                                                />
+                                            </Box>
+                                        </Grid>
+                                    </Grid>
                                     <Select
                                         fullWidth
                                         value={orderProduct?.diamondType || ''}

@@ -4,7 +4,7 @@ import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { backendUrl } from '../constants/url'
 import getAuthHeader from '../constants/authHeader'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid'
 import axios from 'axios'
 import { formatText } from '../helpers/formatText'
 
@@ -93,7 +93,7 @@ const Users = () => {
     }
 
     React.useEffect(() => {
-            fetchUsers()
+        fetchUsers()
     }, [page])
 
     return (
@@ -143,6 +143,7 @@ const Users = () => {
                                 cursor: 'pointer'
                             }
                         }}
+                        showToolbar
                     />
                 </Grid>
                 <Grid item xs={12} width='100%' sx={{

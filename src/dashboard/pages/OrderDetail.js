@@ -188,9 +188,12 @@ const OrderDetail = () => {
                                                         <Typography sx={{ fontSize: 14, mt: 2 }}>
                                                             Price: {formatAmount(product.price)}
                                                         </Typography>
+                                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                                            Karat of Gold: {product.karatOfGold}K
+                                                        </Typography>
                                                     </Grid>
                                                     <Grid item size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
-                                                        <img src={formatText(product.productId.images[0])} alt={product.productId.name} style={{ height: '200px', width: 'auto' }} />
+                                                        <img src={formatText(product.productId.images[0])} alt={product.productId.name} style={{ height: '220px', width: 'auto' }} />
                                                     </Grid>
                                                 </Grid>
                                             </Paper>

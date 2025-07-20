@@ -156,7 +156,7 @@ const NewCustomOrder = () => {
                             <Paper variant="outlined" sx={{ padding: 2, borderRadius: 2, mb: 2 }} key={index}>
                                 <Grid container spacing={2} columns={12}>
                                     <Grid size={{ xs: 12, md: 8 }}>
-                                        <Typography sx={{ fontSize: 16 }}>
+                                        <Typography sx={{ fontSize: 18 }}>
                                             {product.name}
                                         </Typography>
                                         <Typography sx={{ fontSize: 14, mt: 2 }}>
@@ -174,9 +174,12 @@ const NewCustomOrder = () => {
                                         <Typography sx={{ fontSize: 14, mt: 2 }}>
                                             Price: {formatAmount(product.price)}
                                         </Typography>
+                                        <Typography sx={{ fontSize: 14, mt: 2 }}>
+                                            Karat of Gold: {product.karatOfGold}K
+                                        </Typography>
                                     </Grid>
                                     <Grid size={{ xs: 12, md: 4 }} sx={{ display: 'flex', justifyContent: { md: 'center' } }}>
-                                        <img src={formatText(product.image)} alt={product.name} style={{ height: '200px', width: 'auto' }} />
+                                        <img src={formatText(product.image)} alt={product.name} style={{ height: '220px', width: 'auto' }} />
                                     </Grid>
                                 </Grid>
                                 <Box sx={{ mt: 2, display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
