@@ -1,11 +1,11 @@
 import { Box, Button, Grid, Pagination, TextField, Typography } from '@mui/material'
+import { DataGrid } from '@mui/x-data-grid'
+import axios from 'axios'
 import { enqueueSnackbar } from 'notistack'
 import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { backendUrl } from '../constants/url'
+import { useNavigate } from 'react-router-dom'
 import getAuthHeader from '../constants/authHeader'
-import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid'
-import axios from 'axios'
+import { backendUrl } from '../constants/url'
 import { formatText } from '../helpers/formatText'
 
 const Users = () => {
