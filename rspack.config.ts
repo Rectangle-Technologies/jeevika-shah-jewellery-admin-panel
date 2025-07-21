@@ -78,6 +78,14 @@ export default defineConfig({
     new rspack.HtmlRspackPlugin({
       template: "./index.html",
     }),
+    new rspack.CopyRspackPlugin({
+      patterns: [
+        {
+          from: "public",
+          to: "./",
+        },
+      ],
+    }),
     new ModuleFederationPlugin(mfConfig),
     isDev ? new RefreshPlugin() : null,
   ].filter(Boolean),
