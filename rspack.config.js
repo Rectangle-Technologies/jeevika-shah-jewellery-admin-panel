@@ -1,11 +1,18 @@
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "@rspack/cli";
 import { rspack } from "@rspack/core";
 import * as RefreshPlugin from "@rspack/plugin-react-refresh";
 import { ModuleFederationPlugin } from "@module-federation/enhanced/rspack";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-import { mfConfig } from "./module-federation.config";
+const mfConfig = {
+  name: "admin_panel",
+  exposes: {},
+  shared: ["react", "react-dom"],
+};
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -79,7 +86,7 @@ export default defineConfig({
       template: "./index.html",
     }),
     new ModuleFederationPlugin(mfConfig),
-    isDev ? new RefreshPlugin() : null,
+    null,
   ].filter(Boolean),
   optimization: {
     minimizer: [
