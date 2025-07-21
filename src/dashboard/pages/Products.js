@@ -712,9 +712,7 @@ const ProductForm = () => {
                                             } catch (error) {
                                                 const apiMsg = error?.response?.data?.message;
                                                 enqueueSnackbar(
-                                                    apiMsg
-                                                        ? `Image upload failed for "${file.name}": ${apiMsg}`
-                                                        : `Image upload failed for "${file.name}"`,
+                                                    apiMsg ? apiMsg : `Image upload failed for "${file.name}"`,
                                                     { variant: "error" }
                                                 );
                                             }
