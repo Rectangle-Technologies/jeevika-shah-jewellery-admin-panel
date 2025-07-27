@@ -739,6 +739,7 @@ const ProductForm = () => {
                                                     }}
                                                 >
                                                     <source src={img} type="video/mp4"/>
+                                                    <source src={img} type="video/mov"/>
                                                     Your browser does not support HTML video.
                                                 </video>
                                             ) : (
