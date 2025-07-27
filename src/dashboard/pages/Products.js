@@ -726,13 +726,34 @@ const ProductForm = () => {
                                 {form.images.map((img, idx) => {
                                     return (
                                         <Grid item xs={6} sm={4} md={3} key={idx} style={{ display: "flex", justifyContent: "center", position: "relative" }}>
-                                            <img src={img} style={{
-                                                width: "300px",
-                                                height: "300px",
-                                                objectFit: "cover",
-                                                borderRadius: 4,
-                                                cursor: "pointer",
-                                            }} />
+                                            {/* Check file extension to determine if it's a video or image */}
+                                            {img.toLowerCase().match(/\.(mp4|webm|ogg|mov|avi|wmv|flv|mkv)$/i) ? (
+                                                <video 
+                                                    width="300" 
+                                                    height="300" 
+                                                    controls 
+                                                    style={{
+                                                        objectFit: "cover",
+                                                        borderRadius: 4,
+                                                        cursor: "pointer",
+                                                    }}
+                                                >
+                                                    <source src={img} type="video/mp4"/>
+                                                    Your browser does not support HTML video.
+                                                </video>
+                                            ) : (
+                                                <img 
+                                                    src={img} 
+                                                    style={{
+                                                        width: "300px",
+                                                        height: "300px",
+                                                        objectFit: "cover",
+                                                        borderRadius: 4,
+                                                        cursor: "pointer",
+                                                    }} 
+                                                    alt={`Product ${idx + 1}`}
+                                                />
+                                            )}
                                             <Avatar style={{
                                                 position: "absolute",
                                                 top: 8,
