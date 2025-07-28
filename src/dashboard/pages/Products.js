@@ -157,10 +157,10 @@ const ProductForm = () => {
                 setLoading(false);
                 return;
             }
-            if (actionButtonText === "Update Product" && form.id) {
+            if (actionButtonText === "Update Product" && form._id) {
                 // Edit mode: update existing product
                 await axios.post(
-                    `${backendUrl}/products/update/${form.id}`,
+                    `${backendUrl}/products/update/${form._id}`,
                     payload,
                     { headers: getAuthHeader() }
                 );
