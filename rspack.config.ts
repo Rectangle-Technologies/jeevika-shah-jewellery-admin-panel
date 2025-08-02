@@ -44,10 +44,6 @@ export default defineConfig({
         type: "asset",
       },
       {
-        test: /\.(png|jpe?g|gif|webp)$/,
-        type: "asset",
-      },
-      {
         test: /\.css$/,
         use: ["postcss-loader"],
         type: "css",
@@ -81,14 +77,6 @@ export default defineConfig({
   plugins: [
     new rspack.HtmlRspackPlugin({
       template: "./index.html",
-    }),
-    new rspack.CopyRspackPlugin({
-      patterns: [
-        {
-          from: "public",
-          to: "./",
-        },
-      ],
     }),
     new ModuleFederationPlugin(mfConfig),
     isDev ? new RefreshPlugin() : null,

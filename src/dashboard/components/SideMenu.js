@@ -3,7 +3,6 @@ import Divider from '@mui/material/Divider';
 import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
 import MenuContent from './MenuContent';
-import mainLogo from '../../../public/mainlogo.png';
 
 const drawerWidth = 240;
 
@@ -38,7 +37,7 @@ export default function SideMenu() {
           justifyContent: 'space-around',
         }}
       >
-        <img src={mainLogo} alt="Logo" width="45%" />
+        <img src="/mainlogo.png" alt="Logo" width="45%" />
       </Box>
       <Divider />
       <Box
