@@ -37,7 +37,7 @@ export default function SideMenu() {
           justifyContent: 'space-around',
         }}
       >
-        <img src="/mainlogo.png" alt="Logo" width="45%" />
+        <img src="https://jeevika-shah-bucket.s3.ap-south-1.amazonaws.com/images/mainlogo.png" alt="Logo" width="45%" />
       </Box>
       <Divider />
       <Box
